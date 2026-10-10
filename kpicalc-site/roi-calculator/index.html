@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROI Calculator — Return on Investment & Payback Period | KPICalc</title>
+  <meta name="description" content="Free ROI calculator: enter your investment and return to get ROI %, net profit and annualized ROI instantly. Includes formula, example and FAQs.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ROI Calculator",
+    "url": "https://kpicalc.com/roi-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate return on investment (ROI), net profit and annualized ROI from your investment and return figures."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good ROI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It depends on the context. The long-run stock market averages roughly 7–10% per year after inflation, so many investors treat that as a baseline. A marketing campaign or business project is usually expected to clear 20–50%+ to justify the risk and effort. There is no universal 'good' number — compare against your cost of capital and alternatives." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between ROI and ROAS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "ROI measures profit relative to total cost: (Revenue − Cost) / Cost. ROAS (return on ad spend) measures revenue relative to ad cost only: Revenue / Ad Spend. A 400% ROAS sounds great until you subtract product and operating costs — ROI tells you whether you actually made money." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why annualize ROI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A 30% ROI over 1 year and a 30% ROI over 5 years are very different outcomes. Annualized ROI converts multi-year returns into a per-year rate so you can compare investments with different time horizons apples-to-apples." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can ROI be negative?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. If your total return is less than your investment, ROI is negative — you lost money. For example, investing $10,000 and getting back $8,000 is an ROI of −20%." }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the limitations of ROI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Simple ROI ignores time (use annualized ROI for that), risk, and cash-flow timing. It also depends on what you count as 'cost' — leave out staff time or overhead and the number flatters you. Use it as a first-pass filter, not the whole decision." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; ROI Calculator</p>
+    <h1>ROI Calculator</h1>
+    <p class="lede">Enter what you put in and what you got back. Instantly see your return on investment, net profit and annualized ROI.</p>
+
+    <section class="calc" aria-label="ROI calculator">
+      <div class="field">
+        <label for="investment">Total investment <span class="hint">— everything you put in</span></label>
+        <div class="input-prefix"><span>$</span><input id="investment" type="number" min="0" step="any" placeholder="10,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="ret">Total return <span class="hint">— everything you got back</span></label>
+        <div class="input-prefix"><span>$</span><input id="ret" type="number" min="0" step="any" placeholder="13,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="years">Time period <span class="hint">— years, optional; used for annualized ROI</span></label>
+        <input id="years" type="number" min="0" step="any" placeholder="1">
+      </div>
+      <button class="btn" id="calcBtn">Calculate ROI</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">ROI</div><div class="v" id="rRoi">–</div></div>
+        <div class="result-box"><div class="k">Net profit</div><div class="v" id="rProfit">–</div></div>
+        <div class="result-box"><div class="k">Annualized ROI</div><div class="v" id="rAnn">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What is ROI?</h2>
+    <p>Return on investment (ROI) is the simplest possible profitability ratio: how much money you made, relative to how much you spent to make it. Marketers use it to judge campaigns, founders use it to judge projects, investors use it to judge everything.</p>
+    <div class="formula">ROI = (Total Return − Total Investment) ÷ Total Investment × 100%</div>
+    <p><strong>Example.</strong> You spend $10,000 on an ad campaign and it generates $13,000 in revenue. Net profit is $3,000, and ROI is ($13,000 − $10,000) ÷ $10,000 = <strong>30%</strong>. Every dollar returned $1.30.</p>
+
+    <h2>Why annualize it</h2>
+    <p>A 30% ROI in one year is excellent; the same 30% stretched over five years is mediocre. Annualized ROI converts the result into a per-year rate using compounding:</p>
+    <div class="formula">Annualized ROI = (1 + ROI)<sup>1 ÷ years</sup> − 1</div>
+    <p>That five-year 30% becomes about 5.4% per year — suddenly comparable to any other yearly investment.</p>
+
+    <h2>What counts as "investment"?</h2>
+    <p>The number is only as honest as the inputs. Ad spend is the obvious one, but real investment often includes agency fees, creative production, software, and your team's time. The most common ROI mistake is counting revenue fully while counting costs partially — which is exactly why ROAS (ad revenue ÷ ad spend) usually looks better than ROI. If a campaign's ROAS is 400% but its true ROI is 8%, the business has a cost problem, not a marketing problem.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>What is a good ROI?</summary>
+        <p>It depends on the context. The long-run stock market averages roughly 7–10% per year after inflation, so many investors treat that as a baseline. A marketing campaign or business project is usually expected to clear 20–50%+ to justify the risk and effort. There is no universal "good" number — compare against your cost of capital and alternatives.</p>
+      </details>
+      <details>
+        <summary>What is the difference between ROI and ROAS?</summary>
+        <p>ROI measures profit relative to total cost: (Revenue − Cost) ÷ Cost. ROAS measures revenue relative to ad cost only: Revenue ÷ Ad Spend. A 400% ROAS sounds great until you subtract product and operating costs — ROI tells you whether you actually made money.</p>
+      </details>
+      <details>
+        <summary>Why annualize ROI?</summary>
+        <p>A 30% ROI over 1 year and a 30% ROI over 5 years are very different outcomes. Annualized ROI converts multi-year returns into a per-year rate so you can compare investments with different time horizons apples-to-apples.</p>
+      </details>
+      <details>
+        <summary>Can ROI be negative?</summary>
+        <p>Yes. If your total return is less than your investment, ROI is negative — you lost money. Investing $10,000 and getting back $8,000 is an ROI of −20%.</p>
+      </details>
+      <details>
+        <summary>What are the limitations of ROI?</summary>
+        <p>Simple ROI ignores time (use annualized ROI for that), risk, and cash-flow timing. It also depends on what you count as "cost" — leave out staff time or overhead and the number flatters you. Use it as a first-pass filter, not the whole decision.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      function fmtMoney(n) {
+        return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      }
+      function fmtPct(n) {
+        return (n < 0 ? '−' : '') + Math.abs(n).toFixed(1) + '%';
+      }
+      function paint(el, n) {
+        el.classList.remove('pos', 'neg');
+        if (n > 0) el.classList.add('pos');
+        if (n < 0) el.classList.add('neg');
+      }
+      btn.addEventListener('click', function () {
+        var inv = parseFloat(document.getElementById('investment').value);
+        var ret = parseFloat(document.getElementById('ret').value);
+        var yrs = parseFloat(document.getElementById('years').value);
+        if (isNaN(inv) || isNaN(ret) || inv <= 0) {
+          alert('Please enter a valid investment amount greater than 0, and your total return.');
+          return;
+        }
+        var profit = ret - inv;
+        var roi = profit / inv;
+        var rRoi = document.getElementById('rRoi');
+        var rProfit = document.getElementById('rProfit');
+        var rAnn = document.getElementById('rAnn');
+        rRoi.textContent = fmtPct(roi * 100); paint(rRoi, roi);
+        rProfit.textContent = fmtMoney(profit); paint(rProfit, profit);
+        var note = document.getElementById('resultNote');
+        if (!isNaN(yrs) && yrs > 0 && ret >= 0) {
+          var ann = Math.pow(1 + roi, 1 / yrs) - 1;
+          rAnn.textContent = fmtPct(ann * 100); paint(rAnn, ann);
+          note.textContent = 'Annualized over ' + yrs + (yrs === 1 ? ' year' : ' years') + ' with compounding.';
+          note.hidden = false;
+        } else {
+          rAnn.textContent = '–';
+          note.hidden = true;
+        }
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>
