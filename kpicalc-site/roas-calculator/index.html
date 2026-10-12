@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROAS Calculator — Return on Ad Spend & Break-Even ROAS | KPICalc</title>
+  <meta name="description" content="Free ROAS calculator: enter ad spend and revenue to get your return on ad spend, plus your break-even ROAS from your gross margin. Includes formula, example and FAQs.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ROAS Calculator",
+    "url": "https://kpicalc.com/roas-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate return on ad spend (ROAS) from ad spend and attributed revenue, plus your break-even ROAS given your gross margin."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good ROAS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no universal target — it depends on your margins. With a 50% gross margin, any ROAS above 2.0x makes money; with a 20% margin you need 5.0x just to break even. As a rough rule, ecommerce brands often aim for 4.0x+, but the only number that matters is your break-even ROAS." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate break-even ROAS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Divide 1 by your gross margin (as a decimal): Break-even ROAS = 1 / gross margin. A 60% margin gives 1 / 0.60 = 1.67x. At exactly that ROAS your ads cover their own cost and your cost of goods sold — anything above it is profit." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is my ROAS high but my profit low?",
+        "acceptedAnswer": { "@type": "Answer", "text": "ROAS ignores everything except ad spend: product costs, shipping, refunds, agency fees and overhead are all invisible to it. A 400% ROAS on a low-margin product can still lose money. Compare ROAS against your break-even ROAS, and sanity-check with full ROI that includes all costs." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between ROAS and ROI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "ROAS measures revenue relative to ad spend only: Revenue / Ad Spend. ROI measures profit relative to total cost: (Revenue − All Costs) / All Costs. ROAS is a channel-efficiency metric; ROI tells you whether the business actually made money. Our ROI calculator includes all costs, so the two complement each other." }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I include agency fees and creative costs in ROAS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Strictly, no — those belong in ROI. But if you want a 'blended' ROAS that reflects reality, add fees and creative to the ad spend line and watch it drop. Many teams track both: platform ROAS for media buyers, blended ROAS for the P&L owner." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; ROAS Calculator</p>
+    <h1>ROAS Calculator</h1>
+    <p class="lede">Enter your ad spend and the revenue it drove. Instantly see your return on ad spend — and the break-even ROAS your margins require.</p>
+
+    <section class="calc" aria-label="ROAS calculator">
+      <div class="field">
+        <label for="spend">Ad spend <span class="hint">— media cost only</span></label>
+        <div class="input-prefix"><span>$</span><input id="spend" type="number" min="0" step="any" placeholder="5,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="revenue">Revenue from ads <span class="hint">— attributed revenue</span></label>
+        <div class="input-prefix"><span>$</span><input id="revenue" type="number" min="0" step="any" placeholder="20,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="margin">Gross margin % <span class="hint">— optional; used for break-even ROAS</span></label>
+        <input id="margin" type="number" min="0" max="100" step="any" placeholder="50" inputmode="decimal">
+      </div>
+      <button class="btn" id="calcBtn">Calculate ROAS</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">ROAS</div><div class="v" id="rRoas">–</div></div>
+        <div class="result-box"><div class="k">Break-even ROAS</div><div class="v" id="rBe">–</div></div>
+        <div class="result-box"><div class="k">Est. gross profit</div><div class="v" id="rProfit">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What is ROAS?</h2>
+    <p>Return on ad spend (ROAS) measures how efficiently your advertising turns dollars into revenue: one dollar of ad spend produced how many dollars of sales? Media buyers live by it because it isolates the channel — unlike <a href="../roi-calculator/">ROI</a>, which weighs every cost the business carries.</p>
+    <div class="formula">ROAS = Revenue from ads ÷ Ad spend</div>
+    <p><strong>Example.</strong> You spend $5,000 on Google Ads and it drives $20,000 in attributed revenue. ROAS is $20,000 ÷ $5,000 = <strong>4.0x</strong>, usually written as 400%. Every ad dollar returned four dollars of revenue.</p>
+
+    <h2>The number that actually matters: break-even ROAS</h2>
+    <p>Raw ROAS is flattering because it ignores cost of goods sold. The break-even ROAS corrects for that — it is the ROAS at which your gross profit exactly covers your ad spend:</p>
+    <div class="formula">Break-even ROAS = 1 ÷ Gross margin</div>
+    <p>With a 50% gross margin, break-even ROAS is 2.0x: at 2.0x you cover COGS and media; everything above 2.0x is real profit. With a 20% margin, break-even is 5.0x — and a 4.0x ROAS that looks healthy is actually losing money. Always judge ROAS against <em>your</em> break-even line, not someone else's benchmark.</p>
+
+    <h2>ROAS vs ROI</h2>
+    <p>ROAS answers "did the channel work?" — ROI answers "did the business make money?" A 400% ROAS can coexist with a negative ROI if margins are thin or overhead is heavy. Use ROAS to manage campaigns day to day, and our <a href="../roi-calculator/">ROI calculator</a> to check whether those campaigns were worth running at all.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Comparing ROAS across different margins.</strong> A brand with 70% margins and one with 25% are playing different games — only break-even ROAS makes them comparable.</li>
+      <li><strong>Forgetting attribution gaps.</strong> Platform-reported revenue often over-counts. Cross-check with your actual order data before scaling a "winning" campaign.</li>
+      <li><strong>Optimizing to ROAS alone.</strong> Cutting spend usually lifts ROAS while shrinking profit. ROAS is an efficiency metric; profit is the goal.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>What is a good ROAS?</summary>
+        <p>There is no universal target — it depends on your margins. With a 50% gross margin, any ROAS above 2.0x makes money; with a 20% margin you need 5.0x just to break even. As a rough rule, ecommerce brands often aim for 4.0x+, but the only number that matters is your break-even ROAS.</p>
+      </details>
+      <details>
+        <summary>How do I calculate break-even ROAS?</summary>
+        <p>Divide 1 by your gross margin (as a decimal): Break-even ROAS = 1 ÷ gross margin. A 60% margin gives 1 ÷ 0.60 = 1.67x. At exactly that ROAS your ads cover their own cost and your cost of goods sold — anything above it is profit.</p>
+      </details>
+      <details>
+        <summary>Why is my ROAS high but my profit low?</summary>
+        <p>ROAS ignores everything except ad spend: product costs, shipping, refunds, agency fees and overhead are all invisible to it. A 400% ROAS on a low-margin product can still lose money. Compare ROAS against your break-even ROAS, and sanity-check with full ROI that includes all costs.</p>
+      </details>
+      <details>
+        <summary>What is the difference between ROAS and ROI?</summary>
+        <p>ROAS measures revenue relative to ad spend only: Revenue ÷ Ad Spend. ROI measures profit relative to total cost: (Revenue − All Costs) ÷ All Costs. ROAS is a channel-efficiency metric; ROI tells you whether the business actually made money. Our ROI calculator includes all costs, so the two complement each other.</p>
+      </details>
+      <details>
+        <summary>Should I include agency fees and creative costs in ROAS?</summary>
+        <p>Strictly, no — those belong in ROI. But if you want a "blended" ROAS that reflects reality, add fees and creative to the ad spend line and watch it drop. Many teams track both: platform ROAS for media buyers, blended ROAS for the P&L owner.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      function fmtMoney(n) {
+        return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      }
+      function paint(el, n) {
+        el.classList.remove('pos', 'neg');
+        if (n > 0) el.classList.add('pos');
+        if (n < 0) el.classList.add('neg');
+      }
+      btn.addEventListener('click', function () {
+        var spend = parseFloat(document.getElementById('spend').value);
+        var revenue = parseFloat(document.getElementById('revenue').value);
+        var marginPct = parseFloat(document.getElementById('margin').value);
+        if (isNaN(spend) || isNaN(revenue) || spend <= 0) {
+          alert('Please enter a valid ad spend greater than 0, and the revenue it drove.');
+          return;
+        }
+        var roas = revenue / spend;
+        var rRoas = document.getElementById('rRoas');
+        var rBe = document.getElementById('rBe');
+        var rProfit = document.getElementById('rProfit');
+        var note = document.getElementById('resultNote');
+        rRoas.textContent = roas.toFixed(2) + 'x';
+        paint(rRoas, roas - 1);
+        if (!isNaN(marginPct) && marginPct > 0 && marginPct <= 100) {
+          var margin = marginPct / 100;
+          var be = 1 / margin;
+          rBe.textContent = be.toFixed(2) + 'x';
+          var profit = revenue * margin - spend;
+          rProfit.textContent = fmtMoney(profit);
+          paint(rProfit, profit);
+          if (roas >= be) {
+            note.textContent = 'Above break-even: every $1 of ad spend earns roughly $' +
+              ((revenue * margin - spend) / spend).toFixed(2) + ' of gross profit.';
+          } else {
+            note.textContent = 'Below break-even: at a ' + marginPct + '% margin you need ' +
+              be.toFixed(2) + 'x ROAS to cover ad spend and cost of goods sold.';
+          }
+          note.hidden = false;
+        } else {
+          rBe.textContent = '–';
+          rProfit.textContent = '–';
+          note.hidden = true;
+        }
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -11,9 +11,12 @@
 
 ## 2. 部署（15 分钟，免费）
 
-1. 把本文件夹推送到一个 GitHub 仓库。
+1. 把本文件夹推送到一个 GitHub 仓库。两种传法都可以：
+   - **省事版（推荐）**：把 `kpicalc-site` 整个文件夹传上去 →
+     输出目录填 `/kpicalc-site`
+   - 传文件夹"里面"的内容到仓库根目录 → 输出目录填 `/`
 2. Cloudflare 后台 → Pages → Create → Connect to Git → 选择该仓库。
-   - Build command：留空；Output directory：`/`
+   - Build command：留空；Output directory：按上面选一种填
 3. Pages → Custom domains → 添加 `kpicalc.com`（再加个 `www`，重定向到主域名）。
    - 域名如果已经托管在 Cloudflare，DNS 自动配置，SSL 证书也自动。
 4. 完成。以后每次 `git push` 都会自动重新部署。
