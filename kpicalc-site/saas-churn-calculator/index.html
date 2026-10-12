@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS Churn &amp; MRR Calculator — Logo and Revenue Churn | KPICalc</title>
+  <meta name="description" content="Free SaaS churn calculator: enter your monthly customer and MRR figures to get logo churn %, revenue churn % and net MRR change. Includes formulas, worked example and FAQs.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SaaS Churn & MRR Calculator",
+    "url": "https://kpicalc.com/saas-churn-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate SaaS logo churn, revenue churn and net MRR change from your monthly customer and MRR figures."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good churn rate for SaaS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no universal benchmark — it depends on your market, price point and growth stage. Rather than chasing a magic number, track your own trend: a churn rate that falls quarter over quarter is good news at almost any level. Many SaaS businesses aim for low single-digit monthly logo churn and net revenue churn at or below zero, where expansion revenue offsets losses. What matters most is that new customer acquisition can sustainably outpace churn." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between logo churn and revenue churn?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Logo churn measures the share of customers you lost; revenue churn measures the share of MRR you lost. Revenue churn usually matters more because it reflects the money actually leaving the business: losing many tiny accounts looks bad in logo churn while barely moving revenue, while losing one large account barely moves logo churn but craters revenue. Track both — logo churn diagnoses product and onboarding health, revenue churn diagnoses business health." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can revenue churn be negative?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — this is called negative net revenue churn, or net revenue retention above 100%, and it is one of the healthiest signals in SaaS. It happens when expansion revenue from existing customers — upsells, cross-sells, added seats — exceeds the revenue lost to churned and downgraded accounts. You grow MRR from your existing base without adding a single new customer." }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I measure churn monthly or annually?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Measure churn over the period you report on, but never compare monthly and annual figures directly. Because churn compounds, a steady 3% monthly churn becomes roughly 31% annually — not 36%. Monthly churn is best for spotting trends and reacting quickly; annual churn is what investors and boards usually want to see. Always label the period." }
+      },
+      {
+        "@type": "Question",
+        "name": "How does churn connect to customer lifetime value (LTV)?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Churn sets the ceiling on customer lifetime: with a constant monthly churn rate c, average customer lifetime is roughly 1 ÷ c months. At 5% monthly churn the average customer stays about 20 months, so LTV is roughly 20 × monthly revenue per customer. Cut churn in half and you roughly double LTV — which is why retention work usually beats acquisition work on return." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; SaaS Churn &amp; MRR Calculator</p>
+    <h1>SaaS Churn &amp; MRR Calculator</h1>
+    <p class="lede">Enter your customer and MRR counts for the month. Instantly see your logo churn, revenue churn and net MRR change.</p>
+
+    <section class="calc" aria-label="SaaS churn calculator">
+      <h3>Customers</h3>
+      <div class="field">
+        <label for="cStart">Customers at start of month <span class="hint">— count at the beginning</span></label>
+        <input id="cStart" type="number" min="0" step="1" placeholder="500" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="cNew">New customers added <span class="hint">— signed up during the month</span></label>
+        <input id="cNew" type="number" min="0" step="1" placeholder="40" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="cEnd">Customers at end of month <span class="hint">— count at the end</span></label>
+        <input id="cEnd" type="number" min="0" step="1" placeholder="480" inputmode="numeric">
+      </div>
+      <h3>MRR</h3>
+      <div class="field">
+        <label for="mStart">MRR at start of month <span class="hint">— recurring revenue at the beginning</span></label>
+        <div class="input-prefix"><span>$</span><input id="mStart" type="number" min="0" step="any" placeholder="50,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="mNew">New MRR added <span class="hint">— from new customers only</span></label>
+        <div class="input-prefix"><span>$</span><input id="mNew" type="number" min="0" step="any" placeholder="6,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="mEnd">MRR at end of month <span class="hint">— recurring revenue at the end</span></label>
+        <div class="input-prefix"><span>$</span><input id="mEnd" type="number" min="0" step="any" placeholder="52,000" inputmode="decimal"></div>
+      </div>
+      <button class="btn" id="calcBtn">Calculate Churn</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">Logo churn</div><div class="v" id="rLogo">–</div></div>
+        <div class="result-box"><div class="k">Revenue churn</div><div class="v" id="rRev">–</div></div>
+        <div class="result-box"><div class="k">Net MRR change</div><div class="v" id="rNet">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>Logo churn vs revenue churn</h2>
+    <p>Logo churn counts customers: what share of your customer base disappeared this month. Revenue churn counts dollars: what share of your MRR disappeared. The formulas look identical — lost ÷ starting base × 100 — but the denominator changes, and that changes everything.</p>
+    <div class="formula">Logo churn % = (Customers lost) ÷ (Customers at start) × 100</div>
+    <div class="formula">Revenue churn % = (MRR lost) ÷ (MRR at start) × 100</div>
+    <p>where lost = start + new − end. You must add back the new customers (and new MRR) before comparing — otherwise new signups mask the losses.</p>
+    <p>Revenue churn usually matters more to the business, because dollars pay the bills. A 10% logo churn made up of your smallest accounts might be only a 3% revenue churn — a very different problem from losing one customer who was 10% of your MRR. Track both: logo churn diagnoses product and onboarding health, revenue churn diagnoses business health.</p>
+    <p>Net revenue churn can even go negative. If expansion revenue from existing customers — upsells, cross-sells, added seats — exceeds the revenue lost to churn and downgrades, you grew MRR from the same customer base without adding a single new account.</p>
+
+    <h2>Worked example</h2>
+    <p>You start the month with 500 customers and $50,000 MRR. During the month you add 40 new customers ($6,000 of new MRR), and end with 480 customers and $52,000 MRR.</p>
+    <p>Lost customers = 500 + 40 − 480 = 60, so logo churn = 60 ÷ 500 = <strong>12%</strong>. Lost MRR = $50,000 + $6,000 − $52,000 = $4,000, so revenue churn = $4,000 ÷ $50,000 = <strong>8%</strong>. Net MRR change = $52,000 − $50,000 = <strong>+$2,000</strong>. You churned 12% of your logos yet still grew MRR — new sales outpaced losses.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Forgetting to subtract new customers.</strong> The #1 churn math error: (start − end) ÷ start looks like churn, but new signups hid the real losses. Always add new customers back first: lost = start + new − end.</li>
+      <li><strong>Mixing monthly and annual churn.</strong> Monthly and annual churn are not interchangeable — churn compounds, so a steady 5% monthly churn becomes roughly 46% annually, not 60%. Always label the period.</li>
+      <li><strong>Ignoring contraction.</strong> Downgrades shrink MRR without touching the customer count, so they never show in logo churn. If revenue churn runs far above logo churn, contraction — not cancellation — is your problem.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>What is a good churn rate for SaaS?</summary>
+        <p>There is no universal benchmark — it depends on your market, price point and growth stage. Rather than chasing a magic number, track your own trend: a churn rate that falls quarter over quarter is good news at almost any level. Many SaaS businesses aim for low single-digit monthly logo churn and net revenue churn at or below zero, where expansion revenue offsets losses. What matters most is that new customer acquisition can sustainably outpace churn.</p>
+      </details>
+      <details>
+        <summary>What is the difference between logo churn and revenue churn?</summary>
+        <p>Logo churn measures the share of customers you lost; revenue churn measures the share of MRR you lost. Revenue churn usually matters more because it reflects the money actually leaving the business: losing many tiny accounts looks bad in logo churn while barely moving revenue, while losing one large account barely moves logo churn but craters revenue. Track both — logo churn diagnoses product and onboarding health, revenue churn diagnoses business health.</p>
+      </details>
+      <details>
+        <summary>Can revenue churn be negative?</summary>
+        <p>Yes — this is called negative net revenue churn, or net revenue retention above 100%, and it is one of the healthiest signals in SaaS. It happens when expansion revenue from existing customers — upsells, cross-sells, added seats — exceeds the revenue lost to churned and downgraded accounts. You grow MRR from your existing base without adding a single new customer.</p>
+      </details>
+      <details>
+        <summary>Should I measure churn monthly or annually?</summary>
+        <p>Measure churn over the period you report on, but never compare monthly and annual figures directly. Because churn compounds, a steady 3% monthly churn becomes roughly 31% annually — not 36%. Monthly churn is best for spotting trends and reacting quickly; annual churn is what investors and boards usually want to see. Always label the period.</p>
+      </details>
+      <details>
+        <summary>How does churn connect to customer lifetime value (LTV)?</summary>
+        <p>Churn sets the ceiling on customer lifetime: with a constant monthly churn rate c, average customer lifetime is roughly 1 ÷ c months. At 5% monthly churn the average customer stays about 20 months, so LTV is roughly 20 × monthly revenue per customer. Cut churn in half and you roughly double LTV — which is why retention work usually beats acquisition work on return.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      function fmtMoney(n) {
+        var sign = n < 0 ? '−$' : (n > 0 ? '+$' : '$');
+        return sign + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      }
+      function fmtPct(n) {
+        return (n < 0 ? '−' : '') + Math.abs(n).toFixed(1) + '%';
+      }
+      function paintChurn(el, n) {
+        // Churn is bad: positive churn paints negative, negative (net expansion) paints positive.
+        el.classList.remove('pos', 'neg');
+        if (n > 0) el.classList.add('neg');
+        else if (n < 0) el.classList.add('pos');
+      }
+      btn.addEventListener('click', function () {
+        var cStart = parseFloat(document.getElementById('cStart').value);
+        var cNew = parseFloat(document.getElementById('cNew').value);
+        var cEnd = parseFloat(document.getElementById('cEnd').value);
+        var mStart = parseFloat(document.getElementById('mStart').value);
+        var mNew = parseFloat(document.getElementById('mNew').value);
+        var mEnd = parseFloat(document.getElementById('mEnd').value);
+        if ([cStart, cNew, cEnd, mStart, mNew, mEnd].some(isNaN)) {
+          alert('Please fill in all fields with valid non-negative numbers.');
+          return;
+        }
+        if (!Number.isInteger(cStart) || !Number.isInteger(cNew) || !Number.isInteger(cEnd)) {
+          alert('Customer counts must be whole numbers.');
+          return;
+        }
+        if (cStart < 0 || cNew < 0 || cEnd < 0 || mStart < 0 || mNew < 0 || mEnd < 0) {
+          alert('All values must be zero or greater.');
+          return;
+        }
+        if (cEnd > cStart + cNew) {
+          alert('Customers at end of month cannot exceed customers at start plus new customers. Please check your numbers.');
+          return;
+        }
+        if (mEnd > mStart + mNew) {
+          alert('MRR at end of month cannot exceed MRR at start plus new MRR. Please check your numbers.');
+          return;
+        }
+        var lostC = cStart + cNew - cEnd;
+        var lostM = mStart + mNew - mEnd;
+        var netM = mEnd - mStart;
+        var rLogo = document.getElementById('rLogo');
+        var rRev = document.getElementById('rRev');
+        var rNet = document.getElementById('rNet');
+        if (cStart > 0) {
+          var logo = lostC / cStart * 100;
+          rLogo.textContent = fmtPct(logo);
+          paintChurn(rLogo, logo);
+        } else {
+          rLogo.textContent = '–';
+          rLogo.classList.remove('pos', 'neg');
+        }
+        if (mStart > 0) {
+          var rev = lostM / mStart * 100;
+          rRev.textContent = fmtPct(rev);
+          paintChurn(rRev, rev);
+        } else {
+          rRev.textContent = '–';
+          rRev.classList.remove('pos', 'neg');
+        }
+        rNet.textContent = fmtMoney(netM);
+        rNet.classList.remove('pos', 'neg');
+        rNet.classList.add(netM >= 0 ? 'pos' : 'neg');
+        var note = document.getElementById('resultNote');
+        note.textContent = 'Lost ' + lostC + ' customers and ' + fmtMoney(lostM) +
+          ' of MRR this month; net MRR change ' + fmtMoney(netM) + '.';
+        note.hidden = false;
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

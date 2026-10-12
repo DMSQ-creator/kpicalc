@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LTV:CAC Ratio Calculator — Unit Economics Check | KPICalc</title>
+  <meta name="description" content="Free LTV:CAC calculator: enter ARPA, gross margin, churn and CAC to get customer lifetime value, your LTV:CAC ratio and an instant unit-economics verdict.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "LTV:CAC Ratio Calculator",
+    "url": "https://kpicalc.com/ltv-cac-ratio/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate customer lifetime value (LTV) from ARPA, gross margin and churn, then compare it to CAC as an LTV:CAC ratio with an instant unit-economics verdict."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why is 3:1 the LTV:CAC benchmark?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A 3:1 ratio leaves enough gross profit to cover sales and marketing overhead, R&D, general admin and a return for investors — costs that sit outside CAC. Below 3:1 the business can still grow, but margins for error get thin; below 1:1 you literally spend more to acquire a customer than they ever pay you." }
+      },
+      {
+        "@type": "Question",
+        "name": "My LTV:CAC ratio is 2 — should I panic?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Not necessarily. A ratio between 1 and 3 usually means your acquisition works but isn't efficient yet: raise ARPA (upsells, price increases), improve gross margin, reduce churn, or cut CAC (cheaper channels, better conversion). Just don't scale spend aggressively until the ratio improves — growth multiplies whatever inefficiency you have." }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I use gross margin or contribution margin for LTV?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Gross margin is the standard: revenue minus cost of goods sold (hosting, support, onboarding for SaaS). Contribution margin goes further and subtracts variable sales costs too — it's more conservative. Pick one and use it consistently over time, since the benchmark bands assume gross margin. This calculator uses gross margin." }
+      },
+      {
+        "@type": "Question",
+        "name": "Logo churn or revenue churn for LTV?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Use revenue churn, not logo churn, because LTV is about dollars, not headcount. Losing 10% of customers who pay 1% of revenue barely moves LTV; losing 1% of customers who pay 20% of revenue moves it a lot. Just make sure the churn period matches the ARPA period — both monthly or both annual." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the LTV:CAC ratio work for non-SaaS businesses?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, whenever you can estimate repeat revenue per customer. For ecommerce, replace ARPA and churn with average order value, purchase frequency and customer lifespan (e.g. LTV = average order value x orders per year x average years as a customer x gross margin). The math changes but the question stays the same: do customers pay back their acquisition cost with room to spare?" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; LTV:CAC Ratio Calculator</p>
+    <h1>LTV:CAC Ratio Calculator</h1>
+    <p class="lede">Enter your ARPA, gross margin, churn and customer acquisition cost. Instantly see your customer lifetime value, LTV:CAC ratio and a plain-English verdict on your unit economics.</p>
+
+    <section class="calc" aria-label="LTV:CAC ratio calculator">
+      <div class="field">
+        <label for="arpa">ARPA <span class="hint">— average revenue per account per month</span></label>
+        <div class="input-prefix"><span>$</span><input id="arpa" type="number" min="0" step="any" placeholder="500" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="margin">Gross margin % <span class="hint">— 0–100, e.g. 80</span></label>
+        <input id="margin" type="number" min="0" max="100" step="any" placeholder="80" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="churn">Monthly churn rate % <span class="hint">— % of revenue lost per month, e.g. 5</span></label>
+        <input id="churn" type="number" min="0" max="100" step="any" placeholder="5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="cac">CAC <span class="hint">— fully-loaded cost to acquire one customer</span></label>
+        <div class="input-prefix"><span>$</span><input id="cac" type="number" min="0" step="any" placeholder="2000" inputmode="decimal"></div>
+      </div>
+      <button class="btn" id="calcBtn">Calculate LTV:CAC</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">LTV</div><div class="v" id="rLtv">–</div></div>
+        <div class="result-box"><div class="k">LTV:CAC ratio</div><div class="v" id="rRatio">–</div></div>
+        <div class="result-box"><div class="k">Verdict</div><div class="v" id="rVerdict">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What LTV and CAC each measure</h2>
+    <p><strong>LTV (lifetime value)</strong> is the total gross profit a customer generates over their whole relationship with you: monthly revenue, adjusted for margin, multiplied by how long they stay. <strong>CAC (customer acquisition cost)</strong> is the fully-loaded cost of winning one customer — ad spend plus sales salaries, commissions, tools and overhead, divided by new customers acquired in the same period.</p>
+
+    <h2>Why the ratio is the core SaaS check</h2>
+    <p>Every subscription business runs on one question: do customers pay back what they cost to acquire, with enough left over to fund everything else? The LTV:CAC ratio answers it in a single number. At 3:1 or above, unit economics are healthy and the business can scale spending. Between 1:1 and 3:1, the model works but the buffer is thin — fix pricing, margin, churn or acquisition efficiency before scaling. Below 1:1, each new customer destroys value, and growing faster just loses money faster.</p>
+    <div class="formula">LTV = ARPA × Gross margin ÷ Churn rate &nbsp;·&nbsp; LTV:CAC ratio = LTV ÷ CAC</div>
+    <p><strong>Example.</strong> ARPA of $500, 80% gross margin, 5% monthly churn and $2,000 CAC: LTV = $500 × 0.80 ÷ 0.05 = <strong>$8,000</strong>; ratio = $8,000 ÷ $2,000 = <strong>4.0 : 1</strong> — comfortably healthy.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Mixing logo churn with revenue churn.</strong> LTV is about dollars, so use revenue churn — and make sure the churn period matches the ARPA period (monthly with monthly, annual with annual).</li>
+      <li><strong>Ignoring gross margin.</strong> Revenue-based LTV flatters the number; subtracting cost of goods sold (hosting, support, onboarding) is what makes the ratio honest.</li>
+      <li><strong>Measuring CAC over a different window than churn.</strong> CAC should cover the same customer cohort and timeframe as the lifetime you're estimating — sales cycles and seasonal spend distort both sides if the windows don't line up.</li>
+      <li><strong>Treating 3:1 as a universal law.</strong> Capital-intensive or long-payback businesses may target higher; land-and-expand products may tolerate lower early on if expansion revenue is proven. It's a benchmark, not physics.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Why is 3:1 the LTV:CAC benchmark?</summary>
+        <p>A 3:1 ratio leaves enough gross profit to cover sales and marketing overhead, R&D, general admin and a return for investors — costs that sit outside CAC. Below 3:1 the business can still grow, but margins for error get thin; below 1:1 you literally spend more to acquire a customer than they ever pay you.</p>
+      </details>
+      <details>
+        <summary>My LTV:CAC ratio is 2 — should I panic?</summary>
+        <p>Not necessarily. A ratio between 1 and 3 usually means your acquisition works but isn't efficient yet: raise ARPA (upsells, price increases), improve gross margin, reduce churn, or cut CAC (cheaper channels, better conversion). Just don't scale spend aggressively until the ratio improves — growth multiplies whatever inefficiency you have.</p>
+      </details>
+      <details>
+        <summary>Should I use gross margin or contribution margin for LTV?</summary>
+        <p>Gross margin is the standard: revenue minus cost of goods sold (hosting, support, onboarding for SaaS). Contribution margin goes further and subtracts variable sales costs too — it's more conservative. Pick one and use it consistently over time, since the benchmark bands assume gross margin. This calculator uses gross margin.</p>
+      </details>
+      <details>
+        <summary>Logo churn or revenue churn for LTV?</summary>
+        <p>Use revenue churn, not logo churn, because LTV is about dollars, not headcount. Losing 10% of customers who pay 1% of revenue barely moves LTV; losing 1% of customers who pay 20% of revenue moves it a lot. Just make sure the churn period matches the ARPA period — both monthly or both annual.</p>
+      </details>
+      <details>
+        <summary>Does the LTV:CAC ratio work for non-SaaS businesses?</summary>
+        <p>Yes, whenever you can estimate repeat revenue per customer. For ecommerce, replace ARPA and churn with average order value, purchase frequency and customer lifespan (e.g. LTV = average order value × orders per year × average years as a customer × gross margin). The math changes but the question stays the same: do customers pay back their acquisition cost with room to spare?</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      function fmtMoney(n) {
+        return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      }
+      function paint(el, n) {
+        el.classList.remove('pos', 'neg');
+        if (n > 0) el.classList.add('pos');
+        if (n < 0) el.classList.add('neg');
+      }
+      btn.addEventListener('click', function () {
+        var arpa = parseFloat(document.getElementById('arpa').value);
+        var marginPct = parseFloat(document.getElementById('margin').value);
+        var churnPct = parseFloat(document.getElementById('churn').value);
+        var cac = parseFloat(document.getElementById('cac').value);
+        if (isNaN(arpa) || isNaN(marginPct) || isNaN(churnPct) || isNaN(cac) ||
+            arpa <= 0 || marginPct <= 0 || marginPct > 100 ||
+            churnPct <= 0 || churnPct > 100 || cac <= 0) {
+          alert('Please enter valid numbers: ARPA and CAC greater than 0, and gross margin and monthly churn each between 0 (exclusive) and 100 (inclusive).');
+          return;
+        }
+        var ltv = arpa * (marginPct / 100) / (churnPct / 100);
+        var ratio = ltv / cac;
+        var verdict, cls;
+        if (ratio >= 3) {
+          verdict = 'Healthy';
+          cls = 'pos';
+        } else if (ratio >= 1) {
+          verdict = 'Watch — improve monetization or cut CAC';
+          cls = 'neg';
+        } else {
+          verdict = 'Unsustainable — losing money per customer';
+          cls = 'neg';
+        }
+        var rLtv = document.getElementById('rLtv');
+        var rRatio = document.getElementById('rRatio');
+        var rVerdict = document.getElementById('rVerdict');
+        rLtv.textContent = fmtMoney(ltv);
+        rRatio.textContent = ratio.toFixed(1) + ' : 1';
+        rVerdict.textContent = verdict;
+        rRatio.classList.remove('pos', 'neg');
+        rVerdict.classList.remove('pos', 'neg');
+        if (ratio >= 3) {
+          rRatio.classList.add('pos');
+          rVerdict.classList.add('pos');
+        } else if (ratio < 1) {
+          rRatio.classList.add('neg');
+          rVerdict.classList.add('neg');
+        }
+        var note = document.getElementById('resultNote');
+        note.textContent = 'Verdict: ' + verdict + '. Each customer is worth ' + fmtMoney(ltv) +
+          ' over their lifetime versus a ' + fmtMoney(cac) + ' acquisition cost.';
+        note.hidden = false;
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPM / CPC / CTR Converter — Ad Pricing Math | KPICalc</title>
+  <meta name="description" content="Free CPM / CPC / CTR converter: enter any two of CPM, CPC and CTR and the tool computes the third instantly. Formulas, worked example and FAQs included.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "CPM / CPC / CTR Converter",
+    "url": "https://kpicalc.com/cpm-cpc-converter/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Convert between CPM, CPC and CTR: enter any two of the three metrics and compute the third instantly."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Should I buy on CPM or CPC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Buy CPC when you want the platform to carry the CTR risk — you pay per click no matter how weak your creative is. Buy CPM when your CTR is strong: with a high CTR, a CPM buy works out cheaper than the same traffic priced per click, and you keep the upside. As a rule of thumb, if your expected CPC (from this converter) is lower than the platform's CPC price, take CPM; otherwise take CPC." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a good CTR?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no universal benchmark — CTR depends on channel, format and intent. Search ads run higher than display because the user is already looking for something; a banner nobody asked for runs lower. Judge your CTR against your own past campaigns and tests on the same placement, not against someone else's number. If CTR keeps falling on the same audience, your creative is fatiguing." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is my CPC high when CPM is low?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Because CPC is driven by the ratio of the two: CPC = CPM ÷ (1,000 × CTR). A $2 CPM sounds cheap, but with a 0.1% CTR it converts to $2.00 per click. The CPM is low because the inventory is low-quality or the audience is unresponsive — the same forces that crush your CTR. Cheap impressions are only a bargain if people actually click." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work for social ads too?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — the math is channel-agnostic. CPM, CPC and CTR are defined identically on Meta, TikTok, LinkedIn, Google and programmatic exchanges, so the converter works anywhere those three metrics are reported. Just make sure the inputs come from the same campaign and date range: mixing last month's CPM with this week's CTR gives a meaningless result." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is vCPM?",
+        "acceptedAnswer": { "@type": "Answer", "text": "vCPM is cost per 1,000 viewable impressions — impressions that actually had a chance to be seen (typically at least 50% of the ad's pixels in view for one second on display, two seconds on video, per the IAB/MRC standard). A $5 CPM on barely-viewable inventory can be more expensive per real view than a $7 vCPM. If your goal is awareness, price on vCPM; this converter's math is the same either way." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; CPM / CPC / CTR Converter</p>
+    <h1>CPM / CPC / CTR Converter</h1>
+    <p class="lede">Enter any two of CPM, CPC and CTR — the tool computes the third, showing exactly how your ad pricing translates between impressions, clicks and engagement.</p>
+
+    <section class="calc" aria-label="CPM CPC CTR converter">
+      <div class="field">
+        <label for="cpm">CPM <span class="hint">— cost per 1,000 impressions; leave blank to compute it</span></label>
+        <div class="input-prefix"><span>$</span><input id="cpm" type="number" min="0" step="any" placeholder="12" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="cpc">CPC <span class="hint">— cost per click; leave blank to compute it</span></label>
+        <div class="input-prefix"><span>$</span><input id="cpc" type="number" min="0" step="any" placeholder="0.80" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="ctr">CTR <span class="hint">— enter as %, e.g. 2 for 2%; leave blank to compute it</span></label>
+        <div class="input-prefix"><span>%</span><input id="ctr" type="number" min="0" step="any" placeholder="1.5" inputmode="decimal"></div>
+      </div>
+      <button class="btn" id="calcBtn">Calculate the third</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k" id="kCpm">CPM</div><div class="v" id="rCpm">–</div></div>
+        <div class="result-box"><div class="k" id="kCpc">CPC</div><div class="v" id="rCpc">–</div></div>
+        <div class="result-box"><div class="k" id="kCtr">CTR</div><div class="v" id="rCtr">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What are CPM, CPC and CTR?</h2>
+    <p>These three metrics describe the same ad spend from different angles. <strong>CPM</strong> (cost per mille) is the price of 1,000 impressions — the standard unit for buying display and video inventory. <strong>CPC</strong> (cost per click) is the price of a single click — what you effectively pay when buying on performance. <strong>CTR</strong> (click-through rate) is the bridge between them: the percentage of impressions that turn into clicks. Because clicks = impressions × CTR, the three are locked together — knowing any two pins down the third.</p>
+
+    <h2>The three formulas</h2>
+    <p>Every conversion runs through the same relationship, just solved for a different unknown. Enter CTR as a percentage in the tool; the formulas use it as a decimal (divide by 100 first).</p>
+    <div class="formula">CPC = CPM ÷ (1,000 × CTR)</div>
+    <div class="formula">CPM = CPC × CTR × 1,000</div>
+    <div class="formula">CTR = CPM ÷ (1,000 × CPC) × 100%</div>
+
+    <h2>Worked example</h2>
+    <p>A campaign costs <strong>$12 CPM</strong> and delivers a <strong>1.5% CTR</strong>. First convert CTR to a decimal: 1.5% → 0.015. Then CPC = 12 ÷ (1,000 × 0.015) = 12 ÷ 15 = <strong>$0.80</strong>. Each click effectively costs eighty cents. It works in reverse too: at $0.80 CPC and 1.5% CTR, CPM = 0.80 × 0.015 × 1,000 = <strong>$12.00</strong>. And the third direction: $12 CPM with $0.80 CPC gives CTR = 12 ÷ (1,000 × 0.80) × 100% = <strong>1.50%</strong>.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Entering CTR as a decimal instead of a percent.</strong> Typing 0.015 when you mean 1.5% throws every result off by 100× — always enter 1.5.</li>
+      <li><strong>Comparing CPC across different CTRs.</strong> A $2 CPC at 0.5% CTR and a $2 CPC at 2% CTR are priced at completely different CPMs ($10 vs $40). Compare CPM, or normalize by CTR.</li>
+      <li><strong>Forgetting viewability.</strong> CPM counts served impressions, not seen ones. A cheap CPM on barely-viewable inventory can cost more per real view than a pricier vCPM line.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Should I buy on CPM or CPC?</summary>
+        <p>Buy CPC when you want the platform to carry the CTR risk — you pay per click no matter how weak your creative is. Buy CPM when your CTR is strong: with a high CTR, a CPM buy works out cheaper than the same traffic priced per click, and you keep the upside. As a rule of thumb, if your expected CPC (from this converter) is lower than the platform's CPC price, take CPM; otherwise take CPC.</p>
+      </details>
+      <details>
+        <summary>What is a good CTR?</summary>
+        <p>There is no universal benchmark — CTR depends on channel, format and intent. Search ads run higher than display because the user is already looking for something; a banner nobody asked for runs lower. Judge your CTR against your own past campaigns and tests on the same placement, not against someone else's number. If CTR keeps falling on the same audience, your creative is fatiguing.</p>
+      </details>
+      <details>
+        <summary>Why is my CPC high when CPM is low?</summary>
+        <p>Because CPC is driven by the ratio of the two: CPC = CPM ÷ (1,000 × CTR). A $2 CPM sounds cheap, but with a 0.1% CTR it converts to $2.00 per click. The CPM is low because the inventory is low-quality or the audience is unresponsive — the same forces that crush your CTR. Cheap impressions are only a bargain if people actually click.</p>
+      </details>
+      <details>
+        <summary>Does this work for social ads too?</summary>
+        <p>Yes — the math is channel-agnostic. CPM, CPC and CTR are defined identically on Meta, TikTok, LinkedIn, Google and programmatic exchanges, so the converter works anywhere those three metrics are reported. Just make sure the inputs come from the same campaign and date range: mixing last month's CPM with this week's CTR gives a meaningless result.</p>
+      </details>
+      <details>
+        <summary>What is vCPM?</summary>
+        <p>vCPM is cost per 1,000 viewable impressions — impressions that actually had a chance to be seen (typically at least 50% of the ad's pixels in view for one second on display, two seconds on video, per the IAB/MRC standard). A $5 CPM on barely-viewable inventory can be more expensive per real view than a $7 vCPM. If your goal is awareness, price on vCPM; this converter's math is the same either way.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      function fmtMoney(n) {
+        return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      btn.addEventListener('click', function () {
+        var cpm = parseFloat(document.getElementById('cpm').value);
+        var cpc = parseFloat(document.getElementById('cpc').value);
+        var ctrPct = parseFloat(document.getElementById('ctr').value);
+        var okCpm = !isNaN(cpm) && cpm > 0;
+        var okCpc = !isNaN(cpc) && cpc > 0;
+        var okCtr = !isNaN(ctrPct) && ctrPct > 0;
+        var filled = (okCpm ? 1 : 0) + (okCpc ? 1 : 0) + (okCtr ? 1 : 0);
+        if (filled !== 2) {
+          alert('Please enter exactly two of the three values (CPM, CPC, CTR) — each a number greater than 0 — and leave the third blank.');
+          return;
+        }
+        // All supplied divisors are > 0, so no divide-by-zero is possible here.
+        var rCpm = document.getElementById('rCpm');
+        var rCpc = document.getElementById('rCpc');
+        var rCtr = document.getElementById('rCtr');
+        var kCpm = document.getElementById('kCpm');
+        var kCpc = document.getElementById('kCpc');
+        var kCtr = document.getElementById('kCtr');
+        var note = document.getElementById('resultNote');
+        kCpm.textContent = 'CPM';
+        kCpc.textContent = 'CPC';
+        kCtr.textContent = 'CTR';
+        var computed;
+        if (!okCpm) {
+          var ctr = ctrPct / 100;
+          cpm = cpc * ctr * 1000;
+          computed = 'CPM';
+        } else if (!okCpc) {
+          var ctr2 = ctrPct / 100;
+          cpc = cpm / (1000 * ctr2);
+          computed = 'CPC';
+        } else {
+          ctrPct = cpm / (1000 * cpc) * 100;
+          computed = 'CTR';
+        }
+        rCpm.textContent = fmtMoney(cpm);
+        rCpc.textContent = fmtMoney(cpc);
+        rCtr.textContent = ctrPct.toFixed(2) + '%';
+        if (computed === 'CPM') kCpm.textContent = 'CPM ← calculated';
+        else if (computed === 'CPC') kCpc.textContent = 'CPC ← calculated';
+        else kCtr.textContent = 'CTR ← calculated';
+        note.textContent = 'Calculated from your two inputs: ' + computed +
+          ' was computed; the other two are the values you entered.';
+        note.hidden = false;
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

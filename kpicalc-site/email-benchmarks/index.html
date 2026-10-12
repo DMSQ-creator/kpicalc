@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Benchmark Checker — Compare Your Open & Click Rates | KPICalc</title>
+  <meta name="description" content="Free email benchmark checker: enter your open and click rates to compare them against illustrative 2025 benchmarks for SaaS, ecommerce, media, nonprofit and finance. Includes worked example and FAQs.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <style>
+    .field select {
+      width: 100%; padding: 12px 14px; font-size: 16px;
+      border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink);
+    }
+    .field select:focus { outline: 2px solid var(--brand); border-color: var(--brand); }
+    .bench-table { width: 100%; border-collapse: collapse; margin: 12px 0 6px; font-size: 15px; }
+    .bench-table caption { text-align: left; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; font-style: italic; }
+    .bench-table th, .bench-table td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; }
+    .bench-table th { background: var(--bg-soft, #f7f8fa); font-size: 13.5px; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Email Benchmark Checker",
+    "url": "https://kpicalc.com/email-benchmarks/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Compare your email open and click rates against illustrative 2025 industry benchmarks and get an above, mixed or below verdict."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good email open rate?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It depends on your industry and audience. The illustrative benchmarks in this tool range from about 28% to 38% opens across industries, but those are examples, not targets. Judge your own rate against your past performance and same-industry figures from your ESP, and remember that opens are a noisy metric since Apple Mail Privacy Protection." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why did my open rates jump recently?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The widely reported cause is Apple Mail Privacy Protection (MPP). Apple pre-loads email images — including the tracking pixel that records an open — for many Apple Mail users, which inflates open rates without any real engagement. If your audience is iOS-heavy, expect permanently higher opens and lean on clicks and conversions instead." }
+      },
+      {
+        "@type": "Question",
+        "name": "Open rate vs click rate — which matters?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Click rate matters more. An open only proves the email rendered; a click proves the content was interesting enough to act on, and it is far less distorted by privacy pre-loading. Benchmark your engagement on clicks, and use sudden open-rate drops — not the absolute level — to spot deliverability problems." }
+      },
+      {
+        "@type": "Question",
+        "name": "How often should I clean my list?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Remove hard bounces immediately and run a full hygiene pass every quarter. Suppress subscribers who have not opened or clicked in 6–12 months (or try a re-engagement win-back first). A smaller, engaged list beats a bloated one: better deliverability, cleaner metrics and lower ESP bills." }
+      },
+      {
+        "@type": "Question",
+        "name": "Are these benchmarks accurate for my business?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No — the benchmarks built into this tool are explicitly illustrative, included so you can see how the comparison works. Real benchmarks vary by ESP methodology, list size, geography and how 'click rate' is defined. Verify any comparison against your own ESP data before acting on it." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; Email Benchmark Checker</p>
+    <h1>Email Benchmark Checker</h1>
+    <p class="lede">Enter your open and click rates and pick your industry. Instantly see how each metric stacks up against illustrative benchmarks — and whether you are above, mixed or below.</p>
+
+    <section class="calc" aria-label="Email benchmark checker">
+      <div class="field">
+        <label for="openRate">Your open rate <span class="hint">— unique opens as a % of delivered emails</span></label>
+        <input id="openRate" type="number" min="0" max="100" step="any" placeholder="34" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="clickRate">Your click rate <span class="hint">— unique clicks as a % of delivered emails</span></label>
+        <input id="clickRate" type="number" min="0" max="100" step="any" placeholder="2.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="industry">Industry <span class="hint">— used to pick the comparison benchmark</span></label>
+        <select id="industry">
+          <option value="SaaS">SaaS</option>
+          <option value="Ecommerce">Ecommerce</option>
+          <option value="Media & Publishing">Media &amp; Publishing</option>
+          <option value="Nonprofit">Nonprofit</option>
+          <option value="Finance">Finance</option>
+        </select>
+      </div>
+      <button class="btn" id="calcBtn">Compare my rates</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">Open rate vs benchmark</div><div class="v" id="rOpen">–</div></div>
+        <div class="result-box"><div class="k">Click rate vs benchmark</div><div class="v" id="rClick">–</div></div>
+        <div class="result-box"><div class="k">Verdict</div><div class="v" id="rVerdict">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What open and click rates measure</h2>
+    <p>Open rate is unique opens divided by delivered emails — it measures inbox placement and subject-line appeal. Click rate (unique click-through rate) is unique clicks divided by delivered emails — it measures whether the content, offer and call-to-action did their job. Great opens with weak clicks usually means the subject line over-promised or the CTA was buried.</p>
+
+    <h2>Why open rates are noisy: Apple Mail Privacy Protection</h2>
+    <p>Since late 2021, Apple Mail Privacy Protection pre-loads email images — including tracking pixels — for many Apple Mail users. The widely reported effect is inflated open rates, recorded even when nobody looked. With an iOS-heavy audience, treat opens as a rough trend line and put your weight on clicks and conversions.</p>
+
+    <h2>How to read benchmarks</h2>
+    <p>Benchmarks only work when you compare like with like: the same list type, the same audience and the same definitions (unique opens vs total opens changes everything). Below are illustrative benchmarks built into this tool so you can see the comparison in action — they are examples, not measured facts.</p>
+    <table class="bench-table">
+      <caption>Illustrative 2025 benchmarks — verify against your own ESP data.</caption>
+      <thead>
+        <tr><th>Industry</th><th>Open rate</th><th>Click rate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>SaaS</td><td>32%</td><td>2.8%</td></tr>
+        <tr><td>Ecommerce</td><td>28%</td><td>2.2%</td></tr>
+        <tr><td>Media &amp; Publishing</td><td>35%</td><td>3.1%</td></tr>
+        <tr><td>Nonprofit</td><td>38%</td><td>2.5%</td></tr>
+        <tr><td>Finance</td><td>30%</td><td>2.4%</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Worked example</h2>
+    <p>A SaaS sender reports a 34% open rate and a 2.1% click rate. Against the illustrative SaaS benchmarks (32% open / 2.8% click): opens are above, clicks are below — verdict <strong>Mixed</strong>. Delivery and subject lines look fine; the weak clicks point to a content or CTA problem, not a deliverability problem. Fixing this means testing the offer, copy and CTA placement, not sending more emails.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Comparing across industries.</strong> Nonprofit and media benchmarks sit well above ecommerce — the wrong peer group makes a healthy list look broken.</li>
+      <li><strong>Ignoring list hygiene.</strong> Dead addresses and chronic non-openers drag down both rates and sender reputation. Clean the list before you trust the comparison.</li>
+      <li><strong>Optimizing opens alone.</strong> Clickbait subject lines lift opens while hurting clicks and unsubscribes. Opens get you noticed; clicks pay the bills.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>What is a good email open rate?</summary>
+        <p>It depends on your industry and audience. The illustrative benchmarks in this tool range from about 28% to 38% opens across industries, but those are examples, not targets. Judge your own rate against your past performance and same-industry figures from your ESP, and remember that opens are a noisy metric since Apple Mail Privacy Protection.</p>
+      </details>
+      <details>
+        <summary>Why did my open rates jump recently?</summary>
+        <p>The widely reported cause is Apple Mail Privacy Protection (MPP). Apple pre-loads email images — including the tracking pixel that records an open — for many Apple Mail users, which inflates open rates without any real engagement. If your audience is iOS-heavy, expect permanently higher opens and lean on clicks and conversions instead.</p>
+      </details>
+      <details>
+        <summary>Open rate vs click rate — which matters?</summary>
+        <p>Click rate matters more. An open only proves the email rendered; a click proves the content was interesting enough to act on, and it is far less distorted by privacy pre-loading. Benchmark your engagement on clicks, and use sudden open-rate drops — not the absolute level — to spot deliverability problems.</p>
+      </details>
+      <details>
+        <summary>How often should I clean my list?</summary>
+        <p>Remove hard bounces immediately and run a full hygiene pass every quarter. Suppress subscribers who have not opened or clicked in 6–12 months (or try a re-engagement win-back first). A smaller, engaged list beats a bloated one: better deliverability, cleaner metrics and lower ESP bills.</p>
+      </details>
+      <details>
+        <summary>Are these benchmarks accurate for my business?</summary>
+        <p>No — the benchmarks built into this tool are explicitly illustrative, included so you can see how the comparison works. Real benchmarks vary by ESP methodology, list size, geography and how "click rate" is defined. Verify any comparison against your own ESP data before acting on it.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      // Illustrative 2025 benchmarks — verify against your own ESP data.
+      var BENCHMARKS = {
+        'SaaS': { open: 32, click: 2.8 },
+        'Ecommerce': { open: 28, click: 2.2 },
+        'Media & Publishing': { open: 35, click: 3.1 },
+        'Nonprofit': { open: 38, click: 2.5 },
+        'Finance': { open: 30, click: 2.4 }
+      };
+      function fmtPct(n) {
+        return (n < 0 ? '−' : '') + Math.abs(n) + '%';
+      }
+      function paint(el, state) {
+        el.classList.remove('pos', 'neg');
+        if (state === 'above') el.classList.add('pos');
+        if (state === 'below') el.classList.add('neg');
+        // 'mixed' stays neutral (no class)
+      }
+      btn.addEventListener('click', function () {
+        var open = parseFloat(document.getElementById('openRate').value);
+        var click = parseFloat(document.getElementById('clickRate').value);
+        var industry = document.getElementById('industry').value;
+        if (isNaN(open) || isNaN(click) || open < 0 || open > 100 || click < 0 || click > 100) {
+          alert('Please enter valid open and click rates between 0 and 100%.');
+          return;
+        }
+        var bench = BENCHMARKS[industry] || BENCHMARKS['SaaS'];
+        var openState = open >= bench.open ? 'above' : 'below';
+        var clickState = click >= bench.click ? 'above' : 'below';
+        var verdict, note;
+        if (openState === 'above' && clickState === 'above') {
+          verdict = 'Above benchmark';
+          note = 'Both metrics beat the illustrative ' + industry + ' benchmarks — your program is performing well.';
+        } else if (openState === 'below' && clickState === 'below') {
+          verdict = 'Below benchmark';
+          note = 'Both metrics trail the illustrative ' + industry + ' benchmarks — check list hygiene and deliverability first.';
+        } else {
+          verdict = 'Mixed';
+          note = 'One metric beats the illustrative ' + industry + ' benchmark while the other trails it — dig into the weak metric before changing the strong one.';
+        }
+        var rOpen = document.getElementById('rOpen');
+        var rClick = document.getElementById('rClick');
+        var rVerdict = document.getElementById('rVerdict');
+        rOpen.textContent = fmtPct(open) + ' vs ' + fmtPct(bench.open);
+        paint(rOpen, openState);
+        rClick.textContent = fmtPct(click) + ' vs ' + fmtPct(bench.click);
+        paint(rClick, clickState);
+        rVerdict.textContent = verdict;
+        paint(rVerdict, verdict === 'Above benchmark' ? 'above' : verdict === 'Below benchmark' ? 'below' : 'mixed');
+        var resultNote = document.getElementById('resultNote');
+        resultNote.textContent = note + ' Benchmarks are illustrative 2025 figures — verify against your own ESP data.';
+        resultNote.hidden = false;
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

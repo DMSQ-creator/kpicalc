@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAC Calculator — Customer Acquisition Cost & Payback | KPICalc</title>
+  <meta name="description" content="Free CAC calculator: enter sales & marketing spend and new customers to get your customer acquisition cost and payback period instantly. Includes formula, example and FAQs.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "CAC Calculator",
+    "url": "https://kpicalc.com/cac-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate customer acquisition cost (CAC) from sales and marketing spend and new customers, plus the payback period on each customer."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a good CAC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no universal number — it depends on what each customer is worth. The classic benchmark for subscription businesses is an LTV:CAC ratio of at least 3:1: lifetime value should be three times the acquisition cost. A $250 CAC is fine for a $900 LTV customer and fatal for a $100 one. Always judge CAC against your customer's lifetime value, not someone else's number." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between blended CAC and paid CAC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Blended CAC divides all sales and marketing spend by all new customers, including organic and referral signups. Paid CAC divides only paid media spend by the customers that media acquired. Blended CAC shows the true cost of growth; paid CAC tells you what your next customer from ads actually costs. Track both — blended for the P&L, paid for scaling decisions." }
+      },
+      {
+        "@type": "Question",
+        "name": "Should sales and marketing salaries count in CAC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Fully-loaded CAC includes salaries and benefits for sales and marketing staff, tools and software, agency and contractor fees, and ad spend — everything you paid to acquire customers in the period. Leaving out salaries is the most common way CAC gets understated and makes paid channels look more profitable than they are." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between CAC and CPA?",
+        "acceptedAnswer": { "@type": "Answer", "text": "CPA (cost per acquisition) usually measures the cost of a single conversion event — a signup, download or lead — on one channel, and often counts media spend only. CAC measures the fully-loaded cost of acquiring a paying customer across the whole sales and marketing effort. CPA is a campaign metric; CAC is a business metric." }
+      },
+      {
+        "@type": "Question",
+        "name": "How does CAC relate to LTV?",
+        "acceptedAnswer": { "@type": "Answer", "text": "LTV (lifetime value) is what a customer pays you over their whole relationship; CAC is what you paid to win them. The business model works when LTV comfortably exceeds CAC — the common target is a 3:1 LTV:CAC ratio, with a payback period of 12 months or less. High CAC can be fine if retention and monetization make LTV high enough." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; CAC Calculator</p>
+    <h1>CAC Calculator</h1>
+    <p class="lede">Enter what you spent on sales and marketing and how many customers you won. Instantly see your customer acquisition cost — and how long each customer takes to pay it back.</p>
+
+    <section class="calc" aria-label="CAC calculator">
+      <div class="field">
+        <label for="spend">Sales &amp; marketing spend <span class="hint">— total for the period</span></label>
+        <div class="input-prefix"><span>$</span><input id="spend" type="number" min="0" step="any" placeholder="50,000" inputmode="decimal"></div>
+      </div>
+      <div class="field">
+        <label for="customers">New customers <span class="hint">— won in the same period</span></label>
+        <input id="customers" type="number" min="0" step="any" placeholder="200" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="profit">Avg. gross profit per customer / month <span class="hint">— optional; used for payback period</span></label>
+        <div class="input-prefix"><span>$</span><input id="profit" type="number" min="0" step="any" placeholder="30" inputmode="decimal"></div>
+      </div>
+      <button class="btn" id="calcBtn">Calculate CAC</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">CAC</div><div class="v" id="rCac">–</div></div>
+        <div class="result-box"><div class="k">Payback period</div><div class="v" id="rPayback">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What is CAC?</h2>
+    <p>Customer acquisition cost (CAC) is the total cost of winning one new customer. It answers the most basic growth question: <em>how much do we pay for each customer?</em> SaaS companies, agencies and ecommerce brands track it because it is the denominator of unit economics — every pricing, budget and scaling decision eventually runs through it.</p>
+    <div class="formula">CAC = Total sales &amp; marketing spend ÷ New customers</div>
+
+    <h2>What counts as sales &amp; marketing spend?</h2>
+    <p>More than just ad spend. Fully-loaded CAC includes:</p>
+    <ul>
+      <li><strong>Ad spend</strong> — paid search, social, display, sponsorships.</li>
+      <li><strong>Salaries and benefits</strong> — the sales team, growth marketers, SDRs. This is usually the biggest line item and the one most often left out.</li>
+      <li><strong>Tools and software</strong> — CRM, marketing automation, ad platforms, analytics.</li>
+      <li><strong>Agency and contractor fees</strong> — plus creative production for campaigns.</li>
+    </ul>
+    <p>Measure both over the <strong>same period</strong> — typically a month or a quarter — so the ratio is meaningful.</p>
+
+    <h2>Worked example</h2>
+    <p>You spend <strong>$50,000</strong> on sales and marketing in a quarter and win <strong>200</strong> new customers. CAC is $50,000 ÷ 200 = <strong>$250</strong> per customer. If each customer generates <strong>$30</strong> of gross profit per month, the payback period is $250 ÷ $30 = <strong>8.3 months</strong> — each customer has repaid their acquisition cost before the end of month nine.</p>
+    <div class="formula">Payback period (months) = CAC ÷ Monthly gross profit per customer</div>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Mixing up blended and paid CAC.</strong> Dividing total spend by all new customers (blended) always looks cheaper than dividing ad spend by ad-acquired customers only (paid). Use blended for the P&amp;L and paid when deciding whether to scale a channel.</li>
+      <li><strong>Ignoring salaries.</strong> A team of five on $120k salaries adds $150k per quarter to the numerator. Leave them out and your CAC is fiction.</li>
+      <li><strong>Measuring over too-short periods.</strong> A one-week spike in signups after a launch makes CAC look brilliant. Use a month or quarter so acquisition spend and its results land in the same window.</li>
+      <li><strong>Judging CAC without LTV.</strong> $250 CAC is fine for a $900-lifetime-value customer and fatal for a $100 one. Pair CAC with our payback check above and always read it against lifetime value.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>What is a good CAC?</summary>
+        <p>There is no universal number — it depends on what each customer is worth. The classic benchmark for subscription businesses is an LTV:CAC ratio of at least 3:1: lifetime value should be three times the acquisition cost. A $250 CAC is fine for a $900 LTV customer and fatal for a $100 one. Always judge CAC against your customer's lifetime value, not someone else's number.</p>
+      </details>
+      <details>
+        <summary>What is the difference between blended CAC and paid CAC?</summary>
+        <p>Blended CAC divides all sales and marketing spend by all new customers, including organic and referral signups. Paid CAC divides only paid media spend by the customers that media acquired. Blended CAC shows the true cost of growth; paid CAC tells you what your next customer from ads actually costs. Track both — blended for the P&amp;L, paid for scaling decisions.</p>
+      </details>
+      <details>
+        <summary>Should sales and marketing salaries count in CAC?</summary>
+        <p>Yes. Fully-loaded CAC includes salaries and benefits for sales and marketing staff, tools and software, agency and contractor fees, and ad spend — everything you paid to acquire customers in the period. Leaving out salaries is the most common way CAC gets understated and makes paid channels look more profitable than they are.</p>
+      </details>
+      <details>
+        <summary>What is the difference between CAC and CPA?</summary>
+        <p>CPA (cost per acquisition) usually measures the cost of a single conversion event — a signup, download or lead — on one channel, and often counts media spend only. CAC measures the fully-loaded cost of acquiring a paying customer across the whole sales and marketing effort. CPA is a campaign metric; CAC is a business metric.</p>
+      </details>
+      <details>
+        <summary>How does CAC relate to LTV?</summary>
+        <p>LTV (lifetime value) is what a customer pays you over their whole relationship; CAC is what you paid to win them. The business model works when LTV comfortably exceeds CAC — the common target is a 3:1 LTV:CAC ratio, with a payback period of 12 months or less. High CAC can be fine if retention and monetization make LTV high enough.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      function fmtMoney(n) {
+        return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      btn.addEventListener('click', function () {
+        var spend = parseFloat(document.getElementById('spend').value);
+        var customers = parseFloat(document.getElementById('customers').value);
+        var profitRaw = document.getElementById('profit').value.trim();
+        var profit = profitRaw === '' ? NaN : parseFloat(profitRaw);
+        if (isNaN(spend) || isNaN(customers) || spend < 0 || customers <= 0) {
+          alert('Please enter a valid sales & marketing spend of 0 or more, and a number of new customers greater than 0.');
+          return;
+        }
+        if (profitRaw !== '' && (isNaN(profit) || profit <= 0)) {
+          alert('If you enter monthly gross profit per customer, it must be greater than 0.');
+          return;
+        }
+        var cac = spend / customers;
+        var rCac = document.getElementById('rCac');
+        var rPayback = document.getElementById('rPayback');
+        var note = document.getElementById('resultNote');
+        rCac.textContent = fmtMoney(cac);
+        if (!isNaN(profit)) {
+          var months = cac / profit;
+          rPayback.textContent = months.toFixed(2) + ' months';
+          rPayback.classList.remove('pos', 'neg');
+          if (months <= 12) {
+            rPayback.classList.add('pos');
+            note.textContent = 'Healthy: this CAC pays back within 12 months.';
+          } else {
+            rPayback.classList.add('neg');
+            note.textContent = 'Watch: payback takes over 12 months — raise pricing, improve retention or lower acquisition cost.';
+          }
+          note.hidden = false;
+        } else {
+          rPayback.textContent = '–';
+          note.hidden = true;
+        }
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

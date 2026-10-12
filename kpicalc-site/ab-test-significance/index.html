@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A/B Test Significance Checker — Two-Proportion Z-Test | KPICalc</title>
+  <meta name="description" content="Free A/B test significance checker: enter visitors and conversions for each variant to get conversion rates, z-score, p-value and whether the result is significant at 95% confidence.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "A/B Test Significance Checker",
+    "url": "https://kpicalc.com/ab-test-significance/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Check whether your A/B test results are statistically significant using a two-proportion z-test on conversion rates."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many visitors do I need for a valid A/B test?",
+        "acceptedAnswer": { "@type": "Answer", "text": "There is no fixed number — it depends on your baseline conversion rate and the uplift you want to detect. Small uplifts on low conversion rates need thousands of visitors per variant; big uplifts need far fewer. As a rule of thumb, aim for at least a few hundred conversions per variant before trusting the result, and always decide your target sample size before the test starts rather than stopping when you like the numbers." }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the p-value actually mean?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The p-value is the probability of seeing a difference at least this large if the variants were actually identical and the difference were pure noise. A p-value of 0.15 means there is a 15% chance randomness alone could have produced what you see. It is not the probability that B is better, and it is not the probability the result is wrong — it is a measure of how surprising the data would be under the \"no real difference\" assumption." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is 95% confidence the standard?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It is a convention that balances two errors: calling a dud a winner (false positive) and missing a real winner (false negative). 95% confidence means accepting a 5% false-positive rate. A stricter level like 99% cuts false positives but needs much larger samples and makes you slower to ship. For most marketing tests, 95% is the pragmatic middle ground." }
+      },
+      {
+        "@type": "Question",
+        "name": "Significant but tiny uplift — ship it?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Statistical significance is not the same as practical importance. With enough traffic, even a 0.1% uplift can be significant — but shipping it may not be worth the engineering time, maintenance cost or added complexity. Judge tiny significant wins on business impact: revenue per visitor, implementation cost, and whether the change makes the product harder to maintain." }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my variants have unequal traffic?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The two-proportion z-test handles unequal sample sizes naturally — each variant is weighted by its own sample size in the pooled standard error, so a 50/50 split is not required. What does matter is that traffic was split randomly and the imbalance was stable throughout the test; a split that changes mid-test (for example, ramping B from 10% to 50%) can introduce time-based bias the test cannot see." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; A/B Test Significance Checker</p>
+    <h1>A/B Test Significance Checker</h1>
+    <p class="lede">Enter visitors and conversions for each variant. Instantly see conversion rates, uplift, z-score, p-value — and whether the difference is statistically significant at 95% confidence.</p>
+
+    <section class="calc" aria-label="A/B test significance calculator">
+      <div class="field">
+        <label for="n1">Visitors A <span class="hint">— control sample size</span></label>
+        <input id="n1" type="number" min="1" step="1" placeholder="1,000" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="c1">Conversions A <span class="hint">— cannot exceed visitors A</span></label>
+        <input id="c1" type="number" min="0" step="1" placeholder="100" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="n2">Visitors B <span class="hint">— variant sample size</span></label>
+        <input id="n2" type="number" min="1" step="1" placeholder="1,000" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="c2">Conversions B <span class="hint">— cannot exceed visitors B</span></label>
+        <input id="c2" type="number" min="0" step="1" placeholder="120" inputmode="numeric">
+      </div>
+      <button class="btn" id="calcBtn">Check significance</button>
+      <div class="results" id="results" hidden>
+        <div class="result-box"><div class="k">Conversion rate A</div><div class="v" id="rP1">–</div></div>
+        <div class="result-box"><div class="k">Conversion rate B</div><div class="v" id="rP2">–</div></div>
+        <div class="result-box"><div class="k">Uplift</div><div class="v" id="rUplift">–</div></div>
+        <div class="result-box"><div class="k">Z-score</div><div class="v" id="rZ">–</div></div>
+        <div class="result-box"><div class="k">P-value</div><div class="v" id="rP">–</div></div>
+        <div class="result-box"><div class="k">Significant? (95%)</div><div class="v" id="rSig">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What statistical significance means</h2>
+    <p>"Significant" does not mean "big" or "important" — it means the difference between your variants is unlikely to be random noise. A significance test starts from the assumption that A and B are really identical (the null hypothesis) and asks: if that were true, how surprising would our observed gap be? If the gap would happen less than 5% of the time by pure chance, we call the result significant at 95% confidence and act as if B genuinely differs from A.</p>
+
+    <h2>The formula</h2>
+    <p>This calculator uses the two-proportion z-test, the standard way to compare conversion rates between two groups:</p>
+    <div class="formula">z = (p2 − p1) ÷ √(p × (1 − p) × (1/n1 + 1/n2))</div>
+    <p>Here p1 and p2 are the two conversion rates, and p is the pooled rate — total conversions divided by total visitors. The denominator is the standard error: how much the difference would wobble under pure chance. Dividing the observed gap by that wobble gives the z-score, which the standard normal distribution converts into a two-tailed p-value.</p>
+
+    <h2>A worked example</h2>
+    <p>Suppose variant A converts 100 out of 1,000 visitors (p1 = 10%) and variant B converts 120 out of 1,000 (p2 = 12%). The pooled rate is 220 ÷ 2,000 = 11%, so the standard error is √(0.11 × 0.89 × (1/1000 + 1/1000)) ≈ 0.014. The z-score is (0.12 − 0.10) ÷ 0.014 ≈ <strong>1.43</strong>, giving a two-tailed p-value of about <strong>0.15</strong>. That is above 0.05, so the result is <strong>not significant</strong> — despite the tempting 20% uplift, this data could easily be noise. With ten times the traffic (1,000/10,000 vs 1,200/10,000), the same rates give z ≈ 4.52 and p &lt; 0.0001: highly significant.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Peeking early.</strong> Checking the test daily and stopping the moment it turns green inflates false positives — the 5% error rate assumes you looked once, at a pre-planned sample size.</li>
+      <li><strong>Tiny samples.</strong> With only a handful of conversions, one lucky click moves the percentage wildly. This calculator warns you when either variant has fewer than 100 visitors.</li>
+      <li><strong>Confusing significance with importance.</strong> A huge sample can make a 0.1% uplift "significant". Always pair the p-value with the actual uplift and ask whether the gain is worth shipping.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>How many visitors do I need for a valid A/B test?</summary>
+        <p>There is no fixed number — it depends on your baseline conversion rate and the uplift you want to detect. Small uplifts on low conversion rates need thousands of visitors per variant; big uplifts need far fewer. As a rule of thumb, aim for at least a few hundred conversions per variant before trusting the result, and always decide your target sample size before the test starts rather than stopping when you like the numbers.</p>
+      </details>
+      <details>
+        <summary>What does the p-value actually mean?</summary>
+        <p>The p-value is the probability of seeing a difference at least this large if the variants were actually identical and the difference were pure noise. A p-value of 0.15 means there is a 15% chance randomness alone could have produced what you see. It is not the probability that B is better, and it is not the probability the result is wrong — it is a measure of how surprising the data would be under the "no real difference" assumption.</p>
+      </details>
+      <details>
+        <summary>Why is 95% confidence the standard?</summary>
+        <p>It is a convention that balances two errors: calling a dud a winner (false positive) and missing a real winner (false negative). 95% confidence means accepting a 5% false-positive rate. A stricter level like 99% cuts false positives but needs much larger samples and makes you slower to ship. For most marketing tests, 95% is the pragmatic middle ground.</p>
+      </details>
+      <details>
+        <summary>Significant but tiny uplift — ship it?</summary>
+        <p>Statistical significance is not the same as practical importance. With enough traffic, even a 0.1% uplift can be significant — but shipping it may not be worth the engineering time, maintenance cost or added complexity. Judge tiny significant wins on business impact: revenue per visitor, implementation cost, and whether the change makes the product harder to maintain.</p>
+      </details>
+      <details>
+        <summary>What if my variants have unequal traffic?</summary>
+        <p>The two-proportion z-test handles unequal sample sizes naturally — each variant is weighted by its own sample size in the pooled standard error, so a 50/50 split is not required. What does matter is that traffic was split randomly and the imbalance was stable throughout the test; a split that changes mid-test (for example, ramping B from 10% to 50%) can introduce time-based bias the test cannot see.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      // Standard normal CDF via the error function (Abramowitz & Stegun 7.1.26)
+      function erf(x) {
+        var sign = x < 0 ? -1 : 1;
+        x = Math.abs(x);
+        var t = 1 / (1 + 0.3275911 * x);
+        var y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+        return sign * y;
+      }
+      function normCdf(x) {
+        return 0.5 * (1 + erf(x / Math.SQRT2));
+      }
+      function fmtPct(n) {
+        return (n < 0 ? '−' : '') + Math.abs(n).toFixed(1) + '%';
+      }
+      function fmtP(p) {
+        if (p < 0.0001) return '<0.0001';
+        return p.toFixed(4);
+      }
+      function paint(el, n) {
+        el.classList.remove('pos', 'neg');
+        if (n > 0) el.classList.add('pos');
+        if (n < 0) el.classList.add('neg');
+      }
+      btn.addEventListener('click', function () {
+        var n1 = parseFloat(document.getElementById('n1').value);
+        var c1 = parseFloat(document.getElementById('c1').value);
+        var n2 = parseFloat(document.getElementById('n2').value);
+        var c2 = parseFloat(document.getElementById('c2').value);
+        if (isNaN(n1) || isNaN(c1) || isNaN(n2) || isNaN(c2) ||
+            n1 <= 0 || n2 <= 0 || c1 < 0 || c2 < 0 ||
+            c1 > n1 || c2 > n2) {
+          alert('Please enter valid numbers: visitors must be greater than 0, and conversions must be between 0 and the number of visitors for each variant.');
+          return;
+        }
+        var p1 = c1 / n1;
+        var p2 = c2 / n2;
+        var pPool = (c1 + c2) / (n1 + n2);
+        var se = Math.sqrt(pPool * (1 - pPool) * (1 / n1 + 1 / n2));
+        var rP1 = document.getElementById('rP1');
+        var rP2 = document.getElementById('rP2');
+        var rUplift = document.getElementById('rUplift');
+        var rZ = document.getElementById('rZ');
+        var rP = document.getElementById('rP');
+        var rSig = document.getElementById('rSig');
+        var note = document.getElementById('resultNote');
+        rP1.textContent = fmtPct(p1 * 100);
+        rP2.textContent = fmtPct(p2 * 100);
+        if (p1 > 0) {
+          var uplift = (p2 - p1) / p1 * 100;
+          rUplift.textContent = fmtPct(uplift);
+          paint(rUplift, uplift);
+        } else {
+          rUplift.textContent = '–';
+          paint(rUplift, 0);
+        }
+        var notes = [];
+        if (se <= 0) {
+          rZ.textContent = '–';
+          rP.textContent = '–';
+          rSig.textContent = '–';
+          notes.push('Cannot compute significance: the standard error is zero (e.g. no conversions at all).');
+        } else {
+          var z = (p2 - p1) / se;
+          var pval = 2 * (1 - normCdf(Math.abs(z)));
+          var sig = pval < 0.05;
+          rZ.textContent = (z < 0 ? '−' : '') + Math.abs(z).toFixed(2);
+          rP.textContent = fmtP(pval);
+          rSig.textContent = sig ? 'Yes' : 'No';
+          paint(rSig, sig ? 1 : -1);
+        }
+        if (n1 < 100 || n2 < 100) {
+          notes.push('Warning: one variant has fewer than 100 visitors — results are unreliable with small samples.');
+        }
+        note.textContent = notes.join(' ');
+        note.hidden = notes.length === 0;
+        document.getElementById('results').hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>

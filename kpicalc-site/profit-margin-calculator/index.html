@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profit Margin Calculator — Margin vs Markup | KPICalc</title>
+  <meta name="description" content="Free profit margin calculator: enter selling price and cost to get margin and markup percentages, or enter cost plus a target margin to find the price you need to charge. Formulas, examples and FAQs included.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Profit Margin Calculator",
+    "url": "https://kpicalc.com/profit-margin-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Calculate profit margin and markup from selling price and cost, or work backwards from a target margin to find the selling price you need to charge."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Margin vs markup — what's the difference?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Margin divides profit by the selling price — it is the share of revenue you keep. Markup divides profit by cost — it is how much you add on top of what you paid. A 50% markup equals a 33.3% margin on the same numbers. Investors, contracts and dashboards talk about margin; markup is mainly a pricing shortcut. Never quote one when the other was asked for." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can margin be over 100%?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Margin is profit divided by selling price, and profit cannot exceed the price you charged — 100% is the mathematical ceiling. Markup, on the other hand, can exceed 100%: a 200% markup means you tripled your cost. If someone claims a '150% margin', they mean markup." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a good profit margin?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It depends entirely on the industry and the business model. High-volume retail and grocery can thrive on single-digit gross margins, while software and digital products often report gross margins of 70% or more. The real test is whether your margin covers operating costs and leaves a healthy net profit — benchmark against competitors in your own category, not someone else's." }
+      },
+      {
+        "@type": "Question",
+        "name": "Gross margin vs net margin — what's the difference?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Gross margin is (Revenue − cost of goods sold) ÷ revenue: how profitable the product itself is. Net margin is net profit ÷ revenue: what is left after operating costs, interest and taxes — the bottom line. A healthy gross margin can still produce a thin net margin if overhead is bloated. This calculator computes gross margin." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does the reverse mode matter?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Most people think in cost-plus terms ('add 40%'), but business targets are usually set as margins ('we need a 40% margin'). Adding 40% to cost only yields a 28.6% margin — you miss your own target without realizing it. The reverse mode converts a margin target into the exact selling price that delivers it." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; Profit Margin Calculator</p>
+    <h1>Profit Margin Calculator</h1>
+    <p class="lede">Enter your selling price and cost to see your margin and markup instantly — or start from cost and a target margin to find the price you need to charge.</p>
+
+    <section class="calc" aria-label="Profit margin calculator">
+      <div class="field">
+        <label>Calculation mode</label>
+        <div><label><input type="radio" name="mode" value="a" checked> I know price &amp; cost</label></div>
+        <div><label><input type="radio" name="mode" value="b"> I know cost &amp; target margin</label></div>
+      </div>
+      <div id="fieldsA">
+        <div class="field">
+          <label for="price">Selling price <span class="hint">— per unit</span></label>
+          <div class="input-prefix"><span>$</span><input id="price" type="number" min="0" step="any" placeholder="80" inputmode="decimal"></div>
+        </div>
+        <div class="field">
+          <label for="costA">Cost <span class="hint">— per unit, fully loaded</span></label>
+          <div class="input-prefix"><span>$</span><input id="costA" type="number" min="0" step="any" placeholder="50" inputmode="decimal"></div>
+        </div>
+      </div>
+      <div id="fieldsB" hidden>
+        <div class="field">
+          <label for="costB">Cost <span class="hint">— per unit, fully loaded</span></label>
+          <div class="input-prefix"><span>$</span><input id="costB" type="number" min="0" step="any" placeholder="50" inputmode="decimal"></div>
+        </div>
+        <div class="field">
+          <label for="marginTarget">Desired margin <span class="hint">— % of selling price, between 0 and 100</span></label>
+          <input id="marginTarget" type="number" min="0" max="100" step="any" placeholder="40" inputmode="decimal">
+        </div>
+      </div>
+      <button class="btn" id="calcBtn">Calculate margin</button>
+      <div class="results" id="resultsA" hidden>
+        <div class="result-box"><div class="k">Gross profit</div><div class="v" id="rProfitA">–</div></div>
+        <div class="result-box"><div class="k">Margin</div><div class="v" id="rMarginA">–</div></div>
+        <div class="result-box"><div class="k">Markup</div><div class="v" id="rMarkupA">–</div></div>
+      </div>
+      <div class="results" id="resultsB" hidden>
+        <div class="result-box"><div class="k">Required selling price</div><div class="v" id="rPriceB">–</div></div>
+        <div class="result-box"><div class="k">Profit per unit</div><div class="v" id="rProfitB">–</div></div>
+        <div class="result-box"><div class="k">Equivalent markup</div><div class="v" id="rMarkupB">–</div></div>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>Margin vs markup: the eternal confusion</h2>
+    <p>These two numbers measure the same profit with different denominators — and mixing them up is the classic pricing mistake. Margin is profit divided by selling price: the share of each sale you keep. Markup is profit divided by cost: how much you added on top of what you paid. A 50% markup on cost is only a 33.3% margin on price, because the selling price is a bigger denominator than the cost. When a contract, an investor or a dashboard says "margin", it means margin on price — never markup.</p>
+
+    <h2>The formulas</h2>
+    <div class="formula">Margin = (Selling price − Cost) ÷ Selling price × 100</div>
+    <div class="formula">Markup = (Selling price − Cost) ÷ Cost × 100</div>
+    <div class="formula">Required selling price = Cost ÷ (1 − Target margin)</div>
+    <p><strong>Worked example (forward).</strong> You sell a product for $80 and it costs you $50. Profit is $30. Margin = $30 ÷ $80 = <strong>37.5%</strong>. Markup = $30 ÷ $50 = <strong>60%</strong>. Same $30 of profit — margin sounds smaller because it is measured against the bigger number.</p>
+    <p><strong>Worked example (reverse).</strong> Your cost is $50 and you need a 40% margin. Price = $50 ÷ (1 − 0.40) = $50 ÷ 0.60 = <strong>$83.33</strong>. Profit per unit is $33.33, and you can verify: $33.33 ÷ $83.33 = 40%.</p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Quoting markup when the client asked for margin.</strong> A 40% markup sounds like a 40% margin, but on a $140 selling price it is only a 28.6% margin. Quote the wrong one and you underprice every unit.</li>
+      <li><strong>Applying the margin to cost.</strong> A 40% margin does not mean cost × 1.4 — that is a 40% markup. For a true 40% margin, divide cost by 0.6, i.e. cost ÷ (1 − 0.40). The reverse mode above does this for you.</li>
+      <li><strong>Using a thin cost figure.</strong> Freight, packaging, transaction fees and returns all push your true cost up — and your margin down. Load every per-unit cost into the cost field, or the margin flatters you.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Margin vs markup — what's the difference?</summary>
+        <p>Margin divides profit by the selling price — it is the share of revenue you keep. Markup divides profit by cost — it is how much you add on top of what you paid. A 50% markup equals a 33.3% margin on the same numbers. Investors, contracts and dashboards talk about margin; markup is mainly a pricing shortcut. Never quote one when the other was asked for.</p>
+      </details>
+      <details>
+        <summary>Can margin be over 100%?</summary>
+        <p>No. Margin is profit divided by selling price, and profit cannot exceed the price you charged — 100% is the mathematical ceiling. Markup, on the other hand, can exceed 100%: a 200% markup means you tripled your cost. If someone claims a "150% margin", they mean markup.</p>
+      </details>
+      <details>
+        <summary>What is a good profit margin?</summary>
+        <p>It depends entirely on the industry and the business model. High-volume retail and grocery can thrive on single-digit gross margins, while software and digital products often report gross margins of 70% or more. The real test is whether your margin covers operating costs and leaves a healthy net profit — benchmark against competitors in your own category, not someone else's.</p>
+      </details>
+      <details>
+        <summary>Gross margin vs net margin — what's the difference?</summary>
+        <p>Gross margin is (Revenue − cost of goods sold) ÷ revenue: how profitable the product itself is. Net margin is net profit ÷ revenue: what is left after operating costs, interest and taxes — the bottom line. A healthy gross margin can still produce a thin net margin if overhead is bloated. This calculator computes gross margin.</p>
+      </details>
+      <details>
+        <summary>Why does the reverse mode matter?</summary>
+        <p>Most people think in cost-plus terms ("add 40%"), but business targets are usually set as margins ("we need a 40% margin"). Adding 40% to cost only yields a 28.6% margin — you miss your own target without realizing it. The reverse mode converts a margin target into the exact selling price that delivers it.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      var radios = document.getElementsByName('mode');
+      var fieldsA = document.getElementById('fieldsA');
+      var fieldsB = document.getElementById('fieldsB');
+      var resultsA = document.getElementById('resultsA');
+      var resultsB = document.getElementById('resultsB');
+      var note = document.getElementById('resultNote');
+
+      function mode() {
+        for (var i = 0; i < radios.length; i++) {
+          if (radios[i].checked) return radios[i].value;
+        }
+        return 'a';
+      }
+      function onModeChange() {
+        var m = mode();
+        fieldsA.hidden = m !== 'a';
+        fieldsB.hidden = m !== 'b';
+        resultsA.hidden = true;
+        resultsB.hidden = true;
+        note.hidden = true;
+      }
+      for (var i = 0; i < radios.length; i++) {
+        radios[i].addEventListener('change', onModeChange);
+      }
+
+      function fmtMoney(n) {
+        return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+      }
+      function fmtPct(n) {
+        return (n < 0 ? '−' : '') + Math.abs(n).toFixed(1) + '%';
+      }
+      function paint(el, n) {
+        el.classList.remove('pos', 'neg');
+        if (n > 0) el.classList.add('pos');
+        if (n < 0) el.classList.add('neg');
+      }
+
+      function calcA() {
+        var price = parseFloat(document.getElementById('price').value);
+        var cost = parseFloat(document.getElementById('costA').value);
+        if (isNaN(price) || isNaN(cost) || price <= 0 || cost < 0) {
+          alert('Please enter a valid selling price greater than 0, and a cost of 0 or more.');
+          return;
+        }
+        if (cost >= price) {
+          alert('Your cost is not below your selling price — that is a loss, not a margin. Please enter a cost lower than the price.');
+          return;
+        }
+        var profit = price - cost;
+        var margin = profit / price * 100;
+        var rProfit = document.getElementById('rProfitA');
+        var rMargin = document.getElementById('rMarginA');
+        var rMarkup = document.getElementById('rMarkupA');
+        rProfit.textContent = fmtMoney(profit); paint(rProfit, profit);
+        rMargin.textContent = fmtPct(margin);
+        rMarkup.textContent = cost > 0 ? fmtPct(profit / cost * 100) : '–';
+        note.textContent = 'Margin is measured on the selling price; markup is measured on cost — same profit, different denominator.';
+        note.hidden = false;
+        resultsB.hidden = true;
+        resultsA.hidden = false;
+      }
+
+      function calcB() {
+        var cost = parseFloat(document.getElementById('costB').value);
+        var mPct = parseFloat(document.getElementById('marginTarget').value);
+        if (isNaN(cost) || cost < 0) {
+          alert('Please enter a valid cost of 0 or more.');
+          return;
+        }
+        if (isNaN(mPct) || mPct <= 0 || mPct >= 100) {
+          alert('Desired margin must be strictly between 0 and 100 (a 100% margin is impossible).');
+          return;
+        }
+        var m = mPct / 100;
+        var price = cost / (1 - m);
+        var profit = price - cost;
+        var rPrice = document.getElementById('rPriceB');
+        var rProfit = document.getElementById('rProfitB');
+        var rMarkup = document.getElementById('rMarkupB');
+        rPrice.textContent = fmtMoney(price);
+        rProfit.textContent = fmtMoney(profit); paint(rProfit, profit);
+        rMarkup.textContent = cost > 0 ? fmtPct(profit / cost * 100) : '–';
+        note.textContent = 'Charge ' + fmtMoney(price) + ' for exactly ' + mPct + '% margin. A plain ' +
+          mPct + '% markup on cost would only be ' + fmtMoney(cost * (1 + m)) + ' — below your target.';
+        note.hidden = false;
+        resultsA.hidden = true;
+        resultsB.hidden = false;
+      }
+
+      btn.addEventListener('click', function () {
+        if (mode() === 'a') { calcA(); } else { calcB(); }
+      });
+    })();
+  </script>
+</body>
+</html>

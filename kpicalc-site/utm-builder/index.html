@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTM Link Builder — Free Campaign URL Generator | KPICalc</title>
+  <meta name="description" content="Free UTM link builder: enter your page URL and campaign details to generate a properly tagged tracking URL for GA4. Includes naming tips, a worked example and FAQs.">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "UTM Link Builder",
+    "url": "https://kpicalc.com/utm-builder/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Build campaign tracking URLs with properly encoded UTM parameters for GA4 attribution."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do UTM parameters affect SEO?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Not meaningfully. Google treats UTMs as standard query parameters and is good at identifying the canonical version of a page. To be safe, keep a self-referencing canonical tag on your pages and don't use UTMs on links you want indexed, such as in your sitemap or internal navigation." }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I tag internal links with UTMs?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Tagging links inside your own site overwrites the original session source in GA4, so a visitor who arrived from paid search and then clicked a tagged banner gets re-attributed to the banner. Reserve UTMs for external traffic only — ads, emails, social posts and partner links." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between utm_source and utm_medium?",
+        "acceptedAnswer": { "@type": "Answer", "text": "utm_source names where the traffic came from (the referrer, e.g. google, newsletter, facebook), while utm_medium names the marketing channel type (e.g. cpc, email, social). Think of it as: source = who sent it, medium = how it was sent. A useful pattern is utm_source=facebook + utm_medium=paid_social." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is my campaign data split into two rows in GA4?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Almost always a casing or spacing inconsistency: 'Spring-Launch' and 'spring-launch' (or 'spring launch' vs 'spring_launch') are treated as different campaigns because UTM values are case-sensitive. Pick lowercase, hyphenated names once, write them down, and never deviate." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I still need UTMs if my ads use auto-tagging?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Auto-tagging from Google Ads (gclid) and Meta works inside their own reports, but UTMs give you a platform-independent record of source, medium and campaign that survives in GA4 regardless of ad platform. The safest setup is auto-tagging on plus UTMs on every ad URL, so your data stays consistent and auditable." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../">KPI<span>Calc</span></a>
+      <nav class="nav">
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-narrow article">
+    <p class="breadcrumb"><a href="../">Tools</a> &rsaquo; UTM Link Builder</p>
+    <h1>UTM Link Builder</h1>
+    <p class="lede">Paste your page URL, fill in the campaign details, and get a clean, properly encoded tracking link for GA4 in one click.</p>
+
+    <section class="calc" aria-label="UTM link builder">
+      <div class="field">
+        <label for="pageUrl">Page URL <span class="hint">— the landing page, including https://</span></label>
+        <input id="pageUrl" type="text" placeholder="https://example.com/pricing" inputmode="url">
+      </div>
+      <div class="field">
+        <label for="uSource">utm_source <span class="hint">— required: who sent the traffic (google, newsletter, facebook)</span></label>
+        <input id="uSource" type="text" placeholder="newsletter">
+      </div>
+      <div class="field">
+        <label for="uMedium">utm_medium <span class="hint">— required: the channel type (cpc, email, social)</span></label>
+        <input id="uMedium" type="text" placeholder="email">
+      </div>
+      <div class="field">
+        <label for="uCampaign">utm_campaign <span class="hint">— required: the campaign name (spring-launch)</span></label>
+        <input id="uCampaign" type="text" placeholder="spring-launch">
+      </div>
+      <div class="field">
+        <label for="uTerm">utm_term <span class="hint">— optional: paid keyword, e.g. marketing calculator</span></label>
+        <input id="uTerm" type="text" placeholder="marketing calculator">
+      </div>
+      <div class="field">
+        <label for="uContent">utm_content <span class="hint">— optional: distinguishes variants, e.g. hero-cta</span></label>
+        <input id="uContent" type="text" placeholder="hero-cta">
+      </div>
+      <button class="btn" id="calcBtn">Build URL</button>
+      <div class="results" id="results" hidden>
+        <div class="field">
+          <label for="finalUrl">Your tagged URL <span class="hint">— copy and paste it into your ad, email or post</span></label>
+          <input id="finalUrl" type="text" readonly>
+        </div>
+        <button class="btn" id="copyBtn">Copy</button>
+      </div>
+      <p class="result-note" id="resultNote" hidden></p>
+    </section>
+
+    <!-- AdSense slot 1 (enable after approval): in-article, below the tool -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+
+    <h2>What are UTM parameters?</h2>
+    <p>UTM parameters are five small tags you append to a URL — utm_source, utm_medium, utm_campaign, utm_term and utm_content. When someone clicks the tagged link, your analytics (GA4 included) reads the tags and attributes the session to the right channel and campaign. Without them, traffic from emails, social posts and paid ads lands in vague buckets like "direct" or "referral," and you can't tell which campaigns actually worked.</p>
+
+    <h2>What each parameter answers</h2>
+    <ul>
+      <li><strong>utm_source</strong> — who sent the traffic? The referrer: google, newsletter, facebook, partner-site.</li>
+      <li><strong>utm_medium</strong> — how was it sent? The channel type: cpc, email, social, display, referral.</li>
+      <li><strong>utm_campaign</strong> — which campaign? Your internal name: spring-launch, black-friday-2026.</li>
+      <li><strong>utm_term</strong> — which keyword? Mostly for paid search: which query triggered the ad.</li>
+      <li><strong>utm_content</strong> — which variant? Used to split-test: hero-cta vs footer-link in the same email.</li>
+    </ul>
+    <p><strong>Worked example.</strong> Base URL <code>https://example.com/pricing</code>, with source=newsletter, medium=email, campaign=spring-launch:</p>
+    <div class="formula">https://example.com/pricing?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=spring-launch</div>
+    <p>GA4 will report every session from that link under source "newsletter", medium "email", campaign "spring-launch" — so you can compare it directly against your other channels in the traffic acquisition report.</p>
+
+    <h2>UTM naming tips</h2>
+    <ul>
+      <li><strong>Always lowercase.</strong> UTM values are case-sensitive: "Spring-Launch" and "spring-launch" become two campaigns.</li>
+      <li><strong>No spaces.</strong> Use hyphens or underscores: <code>spring-launch</code>, not <code>spring launch</code>. Spaces get encoded as %20 and create messy, inconsistent data.</li>
+      <li><strong>Be consistent.</strong> Decide once whether it's "email" or "e-mail", "paid-social" or "paidsocial", and use the same values everywhere. A short written convention beats memory.</li>
+      <li><strong>Keep source specific, medium generic.</strong> utm_source=facebook + utm_medium=paid-social tells you both the placement and the channel — source=facebook + medium=facebook tells you nothing twice.</li>
+    </ul>
+
+    <h2>Naming-convention mistakes to avoid</h2>
+    <ul>
+      <li><strong>Mixed case creating split data.</strong> One email tagged utm_campaign=SpringLaunch and the next tagged springlaunch fragments one campaign into several rows. Pick lowercase once.</li>
+      <li><strong>Spaces in values.</strong> They get percent-encoded and are hard to read in reports — and "spring launch" and "spring_launch" are different values.</li>
+      <li><strong>Tagging internal links.</strong> UTMs on links inside your own site overwrite the original session source, so paid traffic that clicks a tagged banner gets re-attributed to the banner. External traffic only.</li>
+      <li><strong>Using UTMs as the URL people bookmark.</strong> If the tagged URL ends up indexed or shared widely, your reports fill with junk rows. Share the clean URL publicly; keep tagged URLs in ads, emails and posts.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Do UTM parameters affect SEO?</summary>
+        <p>Not meaningfully. Google treats UTMs as standard query parameters and is good at identifying the canonical version of a page. To be safe, keep a self-referencing canonical tag on your pages and don't use UTMs on links you want indexed, such as in your sitemap or internal navigation.</p>
+      </details>
+      <details>
+        <summary>Should I tag internal links with UTMs?</summary>
+        <p>No. Tagging links inside your own site overwrites the original session source in GA4, so a visitor who arrived from paid search and then clicked a tagged banner gets re-attributed to the banner. Reserve UTMs for external traffic only — ads, emails, social posts and partner links.</p>
+      </details>
+      <details>
+        <summary>What is the difference between utm_source and utm_medium?</summary>
+        <p>utm_source names where the traffic came from (the referrer, e.g. google, newsletter, facebook), while utm_medium names the marketing channel type (e.g. cpc, email, social). Think of it as: source = who sent it, medium = how it was sent. A useful pattern is utm_source=facebook + utm_medium=paid_social.</p>
+      </details>
+      <details>
+        <summary>Why is my campaign data split into two rows in GA4?</summary>
+        <p>Almost always a casing or spacing inconsistency: "Spring-Launch" and "spring-launch" (or "spring launch" vs "spring_launch") are treated as different campaigns because UTM values are case-sensitive. Pick lowercase, hyphenated names once, write them down, and never deviate.</p>
+      </details>
+      <details>
+        <summary>Do I still need UTMs if my ads use auto-tagging?</summary>
+        <p>Auto-tagging from Google Ads (gclid) and Meta works inside their own reports, but UTMs give you a platform-independent record of source, medium and campaign that survives in GA4 regardless of ad platform. The safest setup is auto-tagging on plus UTMs on every ad URL, so your data stays consistent and auditable.</p>
+      </details>
+    </div>
+
+    <!-- AdSense slot 2 (enable after approval): bottom of article -->
+    <!--
+    <div class="ad-slot">Advertisement</div>
+    -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong style="color:var(--ink)">KPICalc</strong> — free marketing calculators.</div>
+      <nav>
+        <a href="../">Tools</a>
+        <a href="../about/">About</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+    <p class="disclaimer">KPICalc provides general educational tools only. Results are estimates for planning purposes and are not financial, investment or business advice.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('calcBtn');
+      var copyBtn = document.getElementById('copyBtn');
+      var note = document.getElementById('resultNote');
+
+      function buildTaggedUrl(rawUrl, tags) {
+        var parsed;
+        try {
+          parsed = new URL(rawUrl.trim());
+        } catch (e) {
+          return null;
+        }
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          return null;
+        }
+        var params = parsed.searchParams;
+        Object.keys(tags).forEach(function (key) {
+          var value = tags[key].trim();
+          if (value) {
+            params.set(key, value);
+          } else {
+            params.delete(key);
+          }
+        });
+        return parsed.toString();
+      }
+
+      btn.addEventListener('click', function () {
+        var rawUrl = document.getElementById('pageUrl').value;
+        var source = document.getElementById('uSource').value;
+        var medium = document.getElementById('uMedium').value;
+        var campaign = document.getElementById('uCampaign').value;
+        if (!source.trim() || !medium.trim() || !campaign.trim()) {
+          alert('Please fill in utm_source, utm_medium and utm_campaign.');
+          return;
+        }
+        var tags = {
+          utm_source: source,
+          utm_medium: medium,
+          utm_campaign: campaign,
+          utm_term: document.getElementById('uTerm').value,
+          utm_content: document.getElementById('uContent').value
+        };
+        var final = buildTaggedUrl(rawUrl, tags);
+        if (final === null) {
+          alert('Please enter a valid page URL starting with http:// or https://');
+          return;
+        }
+        document.getElementById('finalUrl').value = final;
+        document.getElementById('results').hidden = false;
+        note.hidden = true;
+        note.textContent = '';
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var input = document.getElementById('finalUrl');
+        var value = input.value;
+        function showCopied() {
+          note.textContent = 'Copied!';
+          note.hidden = false;
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(value).then(showCopied, function () {
+            fallbackCopy();
+          });
+        } else {
+          fallbackCopy();
+        }
+        function fallbackCopy() {
+          var ta = document.createElement('textarea');
+          ta.value = value;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand('copy');
+            showCopied();
+          } catch (e) {
+            input.select();
+            note.textContent = 'Copy failed — select the URL above and copy it manually.';
+            note.hidden = false;
+          }
+          document.body.removeChild(ta);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
