@@ -1,9 +1,8 @@
 # KPICalc — 项目说明
 
-KPICalc（https://kpicalc.com）是一个免费的英文 B2B 营销计算器工具站：
+KPICalc [https://kpicalc.com](https://kpicalc.com) 是一个免费的英文 B2B 营销计算器工具站：
 10 个交互式计算器（ROI、ROAS、A/B 显著性、CAC、UTM 生成器、LTV:CAC、
-邮件基准、CPM/CPC 互算、SaaS 流失/MRR、利润率），每个配指南文字和 FAQ，
-靠 Google AdSense 广告变现。
+邮件基准、CPM/CPC 互算、SaaS 流失/MRR、利润率），每个配指南文字和 FAQ
 
 ## 技术栈
 
