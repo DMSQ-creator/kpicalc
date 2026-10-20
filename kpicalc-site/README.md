@@ -1,54 +1,60 @@
-# KPICalc — 部署指南
+# KPICalc — 项目说明
 
-纯静态营销计算器网站。无服务器、无后端、无需构建。
-托管：Cloudflare Pages（免费）。每年成本：一个域名（约 $10/年）。
+KPICalc（https://kpicalc.com）是一个免费的英文 B2B 营销计算器工具站：
+10 个交互式计算器（ROI、ROAS、A/B 显著性、CAC、UTM 生成器、LTV:CAC、
+邮件基准、CPM/CPC 互算、SaaS 流失/MRR、利润率），每个配指南文字和 FAQ，
+靠 Google AdSense 广告变现。
 
-## 1. 注册域名
+## 技术栈
 
-- 推荐：`kpicalc.com`（2026-10-10 已核验可注册，付款前请再查一次）。
-- 注册商建议：Cloudflare Registrar，按成本价卖，续费不加价。
-- 别用 `.xyz`：续费并不比 .com 便宜，而且 B2B 用户更信任 `.com`——信任正是这个站变现的东西。
+- 纯静态：HTML + CSS + 原生 JS，无构建步骤、无后端、无依赖
+- 计算全部在浏览器端完成，不上传、不存储用户输入
+- 托管：Cloudflare Pages（免费层）；每年成本 = 一个域名
 
-## 2. 部署（15 分钟，免费）
+## 目录结构
 
-1. 把本文件夹推送到一个 GitHub 仓库。两种传法都可以：
-   - **省事版（推荐）**：把 `kpicalc-site` 整个文件夹传上去 →
-     输出目录填 `/kpicalc-site`
-   - 传文件夹"里面"的内容到仓库根目录 → 输出目录填 `/`
-2. Cloudflare 后台 → Pages → Create → Connect to Git → 选择该仓库。
-   - Build command：留空；Output directory：按上面选一种填
-3. Pages → Custom domains → 添加 `kpicalc.com`（再加个 `www`，重定向到主域名）。
-   - 域名如果已经托管在 Cloudflare，DNS 自动配置，SSL 证书也自动。
-4. 完成。以后每次 `git push` 都会自动重新部署。
+```
+kpicalc-site/
+├── index.html              首页（品牌 + 10 个工具矩阵）
+├── assets/
+│   ├── css/style.css       全站共用样式
+│   └── favicon.svg         站点图标（品牌蓝圆角 + 白色 K）
+├── roi-calculator/         工具页模板（每个工具一个文件夹，内含 index.html）
+├── roas-calculator/
+├── ab-test-significance/
+├── ...（其余 7 个工具同理）
+├── about/                  关于页
+├── privacy/                隐私政策（含 cookie/广告披露、联系邮箱）
+├── README.md               本文件（项目说明）
+└── DEPLOY.md               部署指南（注册域名、Cloudflare 上线、AdSense 申请）
+```
 
-## 3. 申请 AdSense 之前
+## 工具页标准配方（新增工具照抄）
 
-纯工具页会被以 "Low value content"（低价值内容）拒掉。本模板已经按过审配方来做——
-每新增一个工具页，都照着复制：
+每个工具页 = 可用的计算器 + 200–400 词原创指南 + 5 个 FAQ +
+JSON-LD（WebApplication + FAQPage）+ 页头面包屑 + 页尾免责声明。
+复制 `roi-calculator/` 文件夹改名后，逐项改写：`<title>`、meta 描述、
+H1、计算器输入/逻辑、指南文字、FAQ（页面显示和 JSON-LD 里都要改）、
+schema 中的 URL。首页工具矩阵加一张卡片，每个工具页互链 3–5 个兄弟工具。
 
-- [ ] 每个工具页：可用的计算器 + 200–400 词的原创指南文字 + 3–5 个 FAQ
-- [ ] JSON-LD：WebApplication + FAQPage schema（照抄 roi-calculator/index.html）
-- [ ] About 和 Privacy 页面必须上线（cookie/广告披露已写好）
-- [ ] 广告位现在是注释掉的占位符——**过审之后**再打开，且广告不能紧贴"计算"按钮和输入框（政策要求）
-- [ ] 攒到 ~10 个工具页再去申请，别一两个页面就申
-- [ ] 指南文字每篇现写，别复制粘贴
+## 广告位
 
-## 4. 新增工具（复制粘贴流程）
+每页预留了 2 个 AdSense 广告位（注释掉的占位符）：
+一个在计算器下方、一个在文章底部。**过审之前不要打开**，
+打开后保持广告远离"计算"按钮和输入框（AdSense 政策要求）。
 
-1. 复制 `roi-calculator/` 文件夹 → 改名，比如 `roas-calculator/`。
-2. 改写：`<title>`、meta description、H1、计算器的输入项和计算逻辑、
-   指南文字、FAQ（页面上显示的和 JSON-LD 里的都要改）、schema 里的 URL。
-3. 首页工具矩阵里加一张卡片（把 `soon` 改成正式链接）。
-4. 内链：每个工具页链向 3–5 个兄弟工具页。
+## 路径规范
 
-## 5. 路线图（按方案优先级）
+全站使用相对路径（`../assets/...`），不要写成 `/assets/...` 开头，
+否则本地预览和换目录部署会挂。新增页面时注意自己所在的目录层级。
 
-接下来 9 个工具：ROAS 计算器 → A/B 显著性检验 → CAC → UTM 生成器 →
-LTV:CAC → 邮件基准对比 → CPM/CPC 互算 → SaaS 流失/MRR → 利润率计算器。
-第二层再做金融计算器系列。
+## 日常维护
 
-## 6. 日常维护（每年几十小时）
+- UptimeRobot 免费版做可用性监控（死链直接掉排名）
+- 每年审一次内容（基准数据、统计口径有变的更新）
+- AdSense 政策中心：ads.txt 保持有效，有警告马上处理
 
-- 可用性监控（UptimeRobot 免费版）——死链直接掉排名。
-- 每年审一次内容（基准数据、口径有变的更新）。
-- AdSense 政策中心：ads.txt 保持有效，有警告马上处理。
+## 路线图
+
+- 第一批 10 个工具：已全部上线
+- 第二层（待定）：金融计算器系列（房贷、复利、退休、税务），等第一批跑顺、拿到搜索权重后再铺
