@@ -134,10 +134,18 @@ a:hover { text-decoration: underline; }
 /* Benchmark data tables */
 .table-wrap { overflow-x: auto; margin: 16px 0 8px; }
 .data-table { border-collapse: collapse; width: 100%; font-size: 15px; }
-.data-table th, .data-table td {
-  border: 1px solid var(--line); padding: 10px 14px; text-align: left; vertical-align: top;
+.data-table th {
+  background: var(--brand); color: #fff; font-weight: 700; white-space: nowrap;
+  padding: 12px 14px; text-align: left; border: none;
 }
-.data-table th { background: var(--bg-soft); font-weight: 700; white-space: nowrap; }
+.data-table td {
+  padding: 11px 14px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.data-table td:first-child { font-weight: 600; }
+.data-table tbody tr:nth-child(even) td { background: var(--bg-soft); }
+.data-table tbody tr:hover td { background: #eef3fe; }
+.data-table tbody tr:last-child td { border-bottom: none; }
 .data-table td.num, .data-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .table-note { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
 .meta-line { font-size: 14px; color: var(--ink-soft); margin-bottom: 4px; }
