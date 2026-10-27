@@ -149,6 +149,16 @@ a:hover { text-decoration: underline; }
 .data-table td.num, .data-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .table-note { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
 .meta-line { font-size: 14px; color: var(--ink-soft); margin-bottom: 4px; }
+/* Weekly data point entries */
+.data-point {
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 22px 24px; margin-bottom: 18px; background: var(--bg);
+}
+.data-point .dp-date { font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+.data-point .dp-figure { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+.data-point .dp-figure span { font-size: 17px; font-weight: 600; color: var(--ink-soft); margin-left: 6px; }
+.data-point p { margin-bottom: 8px; }
+.data-point .dp-source { font-size: 13px; color: var(--ink-soft); margin-bottom: 0; }
 .callout {
   border-left: 4px solid var(--brand); background: var(--bg-soft);
   border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0;
