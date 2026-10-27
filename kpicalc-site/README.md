@@ -82,6 +82,23 @@ CAC/LTV 基准（Benchmarkit 2026）；三篇均带来源链接与 FAQ schema，
 新条目插到列表最前面，并同步更新落地页卡片里的"最新"一句和
 sitemap 里该 URL 的 lastmod。
 
+更新用一键脚本（在站外，~/workspace/kpicalc-tools/add_weekly_entry.py，
+不会部署到网站），它一次改三处，缺一处就报错停下：
+
+```
+python3 ~/workspace/kpicalc-tools/add_weekly_entry.py \
+  --date "Week of November 3, 2026" \
+  --figure "37%" \
+  --label "of email-driven sales from automated emails" \
+  --text "Automated emails drove 37% of email-driven sales while accounting for just 2% of email volume." \
+  --source-name "Omnisend, 2024 ecommerce data" \
+  --source-url "https://www.omnisend.com/"
+```
+
+先加 --dry-run 可只看不写。页面里的 <!-- WEEKLY-ENTRIES-START --> 与
+<!-- WEEKLY-LATEST-START --> 标记是脚本的定位点，不要删。
+手动改格式时照抄现有条目的 div 结构（.data-point），不要自创样式。
+
 ## 日常维护
 
 - 改全站共用样式（style.css）后，必须给所有页面的 CSS 链接加 ?v=N（每次改动 N+1）强制刷新，否则老访客浏览器会继续用缓存的旧样式（2026-10-27 教训：表格样式已上线但因缓存看不到）
