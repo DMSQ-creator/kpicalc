@@ -135,7 +135,7 @@ a:hover { text-decoration: underline; }
 .table-wrap { overflow-x: auto; margin: 16px 0 8px; }
 .data-table { border-collapse: collapse; width: 100%; font-size: 15px; }
 .data-table th {
-  background: var(--brand); color: #fff; font-weight: 700; white-space: nowrap;
+  background: var(--ink); color: #fff; font-weight: 700; white-space: nowrap;
   padding: 12px 14px; text-align: left; border: none;
 }
 .data-table td {
