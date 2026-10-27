@@ -131,6 +131,22 @@ a:hover { text-decoration: underline; }
   background: #fafbfe;
 }
 
+/* Benchmark data tables */
+.table-wrap { overflow-x: auto; margin: 16px 0 8px; }
+.data-table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.data-table th, .data-table td {
+  border: 1px solid var(--line); padding: 10px 14px; text-align: left; vertical-align: top;
+}
+.data-table th { background: var(--bg-soft); font-weight: 700; white-space: nowrap; }
+.data-table td.num, .data-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.table-note { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+.meta-line { font-size: 14px; color: var(--ink-soft); margin-bottom: 4px; }
+.callout {
+  border-left: 4px solid var(--brand); background: var(--bg-soft);
+  border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0;
+}
+.callout p { margin-bottom: 0; }
+
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); background: var(--bg-soft); }
 .footer-inner {

@@ -63,6 +63,11 @@ schema 中的 URL。首页工具矩阵加一张卡片，每个工具页互链 3�
 铁律：**没有来源的数字不许编**。来源不足就写"暂无可靠来源"，
 不要用"大约""据估计"蒙混。报告里的数字每年按公布的频率复审一次。
 
+已上线（2026-10-27）：邮件基准（MailerLite 2025 + Mailchimp 2023）、
+SaaS 流失基准（ChartMogul 2025 + Benchmarkit 2026）、
+CAC/LTV 基准（Benchmarkit 2026）；三篇均带来源链接与 FAQ schema，
+落地页卡片已由 Coming soon 改为正式入口。
+
 ## 日常维护
 
 - UptimeRobot 免费版做可用性监控（死链直接掉排名）
